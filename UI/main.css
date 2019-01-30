@@ -15,6 +15,18 @@ body {
   outline: 0;
 }
 
+.main-holder{
+  border:1px solid red;
+  color:red;
+  padding:5%;
+  text-align: center;
+}
+
+.main-holder h1{
+  color:#19A15E;
+  border-bottom:1px solid #19A15E
+}
+
 
 /*
 ------------------------------------------------
@@ -28,6 +40,7 @@ body {
 }
 
 .ui-form {
+  border:1px solid red;
   padding:10% 5%;
 }
 
@@ -40,9 +53,9 @@ body {
   color:#fff;
 }
 
-.ui-form input[type='email'], .ui-form [type='password'] {
+.ui-form input[type='email'], input[type='text'], input[type='password']{
   padding: 1.2%;
-  width: 25%;
+  width: 25%!important;
   border: none;
   font-family: "Nunito", nunito, sans-serif;
   border-radius: 5px;
@@ -72,3 +85,10 @@ body {
   box-shadow: 0 3px #0d512f;
   transform: translateY(2px);
 }
+
+
+/*
+-------------------------------------------
+ create political party styling
+-------------------------------------------
+*/
