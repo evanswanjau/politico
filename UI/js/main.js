@@ -54,7 +54,7 @@ function signupUser(){
                     document.getElementById('responseMessage').style.display = 'block';
                   }else {
                     password = document.forms["myForm"]["password"].value;
-
+                    
                     document.getElementById('responseMessage').innerHTML = "registration successful";
                     document.getElementById('responseMessage').style.display = 'block';
                     document.getElementById('responseMessage').style.backgroundColor = '#1C855E';
@@ -71,7 +71,6 @@ function signupUser(){
 
 	return false;
 }
-
 
 // function to sign in user
 function signinUser(){
