@@ -16,8 +16,6 @@ body {
 }
 
 .main-holder{
-  border:1px solid red;
-  color:red;
   padding:5%;
   text-align: center;
 }
@@ -40,7 +38,6 @@ body {
 }
 
 .ui-form {
-  border:1px solid red;
   padding:10% 5%;
 }
 
