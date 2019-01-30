@@ -1,0 +1,87 @@
+/*
+------------------------------------------------
+STYLING CODE FOR POLITICAL SYSTEM
+------------------------------------------------
+*/
+
+body {
+  font-family: "Nunito", nunito, sans-serif;
+  background-color: #efefef;
+}
+
+* {
+  margin: 0%;
+  padding: 0%;
+  outline: 0;
+}
+
+#responseMessage{
+  display: none;
+  margin:1% auto;
+  background-color:#E81B47;
+  width:25.3%;
+  padding:1%;
+  border-radius:5px;
+}
+
+/*
+------------------------------------------------
+ form design
+------------------------------------------------
+*/
+.form-holder{
+  background-color:#19A15E;
+  height:100vh;
+  text-align:center;
+}
+
+.ui-form {
+  padding:5%;
+}
+
+.ui-form h1, p{
+  padding: .5%;
+  color:#fff;
+}
+
+.ui-form h2{
+  color:#fff;
+}
+
+.ui-form input[type='email'], .ui-form [type='password'], .ui-form [type='text'] {
+  padding: 1.2%;
+  width: 25%;
+  border: none;
+  font-family: "Nunito", nunito, sans-serif;
+  border-radius: 5px;
+  color: #444;
+  box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.1);
+}
+
+.mini-input{
+  width:11.2%!important;
+  text-transform: capitalize;
+}
+
+.ui-form input[type='submit'] {
+  width:27.5%;
+  border: none;
+  font-family: "Nunito", nunito, sans-serif;
+  padding: 1% 2%;
+  background-color: #16985A;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: 0 4px #0d512f;
+  -webkit-transition: background .5s, box-shadow .5s;
+}
+
+.ui-form input[type='submit']:hover {
+  background-color: #127142;
+}
+
+.ui-form input[type='submit']:active {
+  background-color: #0d512f;
+  box-shadow: 0 3px #0d512f;
+  transform: translateY(2px);
+}
