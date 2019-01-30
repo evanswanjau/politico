@@ -54,8 +54,8 @@ function signupUser(){
                     document.getElementById('responseMessage').style.display = 'block';
                   }else {
                     password = document.forms["myForm"]["password"].value;
-
-                    document.getElementById('responseMessage').innerHTML = "regitration successful";
+                    
+                    document.getElementById('responseMessage').innerHTML = "registration successful";
                     document.getElementById('responseMessage').style.display = 'block';
                     document.getElementById('responseMessage').style.backgroundColor = '#1C855E';
 
@@ -70,4 +70,30 @@ function signupUser(){
   }
 
 	return false;
+}
+
+// function to sign in user
+function signinUser(){
+
+  // authenticate national id
+  if (document.forms["myForm"]["nationalid"].value == "") {
+    document.getElementById('responseMessage').innerHTML = "national ID is required";
+    document.getElementById('responseMessage').style.display = 'block';
+  }else {
+    let nationalid = document.forms["myForm"]["nationalid"].value;
+
+    // authenticate password
+    if (document.forms["myForm"]["password"].value == "") {
+      document.getElementById('responseMessage').innerHTML = "password is required";
+      document.getElementById('responseMessage').style.display = 'block';
+    }else {
+      let password = document.forms["myForm"]["password"].value;
+
+      document.getElementById('responseMessage').innerHTML = "login successful";
+      document.getElementById('responseMessage').style.display = 'block';
+      document.getElementById('responseMessage').style.backgroundColor = '#1C855E';
+    }
+  }
+
+  return false;
 }
