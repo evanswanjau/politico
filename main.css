@@ -1,0 +1,16 @@
+/*
+------------------------------------------------
+STYLING CODE FOR POLITICAL SYSTEM
+------------------------------------------------
+*/
+
+body {
+  font-family: "Nunito", nunito, sans-serif;
+  background-color: #efefef;
+}
+
+* {
+  margin: 0%;
+  padding: 0%;
+  outline: 0;
+}
