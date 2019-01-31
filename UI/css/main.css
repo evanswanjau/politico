@@ -125,6 +125,8 @@ admin pages design
 
 .main-holder{
   padding:5%;
+  width:70%;
+  margin:auto;
   text-align: center;
 }
 
@@ -165,22 +167,6 @@ voting pages design
   border-bottom:8px solid #E81B47;
   border-top:8px solid #E81B47;
   transform: scale(1.05);
-}
-
-#candidates{
-  width:60%;
-  margin: auto;
-}
-
-#candidates table{
-  width:100%;
-  border:1px solid red;
-  text-align: center;
-}
-
-#candidates th{
-  border:1px solid red;
-  font-weight: bolder;
 }
 
 .item{
