@@ -77,7 +77,7 @@ button:hover {
   color:#fff;
 }
 
-.ui-form input[type='email'], .ui-form [type='password'], .ui-form [type='text'] {
+.ui-form input[type='email'], .ui-form [type='password'], .ui-form [type='text'], select{
   padding: 1.2%;
   width: 25%;
   border: none;
@@ -92,7 +92,17 @@ button:hover {
   text-transform: capitalize;
 }
 
-.ui-form input[type='submit'] {
+.main-holder input[type='email'], .main-holder [type='password'], .main-holder [type='text']{
+  padding: 1.8%;
+  width: 34%;
+}
+
+.main-holder input[type='submit'], select{
+  padding: 1.6%;
+  width: 37.5%;
+}
+
+.ui-form [type='submit'] {
   width:27.5%;
   border: none;
   font-family: "Nunito", nunito, sans-serif;
