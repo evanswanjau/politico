@@ -15,6 +15,7 @@ body {
   outline: 0;
 }
 
+
 #responseMessage{
   display: none;
   margin:1% auto;
@@ -37,7 +38,7 @@ body {
   float:left;
 }
 
-button {
+button, .button {
   border: none;
   font-family: "Nunito", nunito, sans-serif;
   padding: 1% 4%;
@@ -48,8 +49,21 @@ button {
   -webkit-transition: background .5s, box-shadow .5s;
 }
 
-button:hover {
+button:hover, .button:hover {
   background-color: #9B0606;
+}
+
+.button{
+  text-decoration: none;
+}
+
+.edit{
+  background-color:#19A15E;
+}
+
+.edit:hover{
+  background-color:#fff;
+  color:#19A15E;
 }
 
 
