@@ -86,11 +86,14 @@ body {
   transform: translateY(2px);
 }
 
+
+
 /*
 ------------------------------------------------
 admin pages design
 ------------------------------------------------
 */
+
 .main-holder{
   padding:5%;
   text-align: center;
@@ -101,4 +104,32 @@ admin pages design
   padding-bottom:1%;
   border-bottom:1px solid #19A15E;
   color:#19A15E;
+}
+
+/*
+------------------------------------------------
+voting pages design
+------------------------------------------------
+*/
+
+#gov-office li{
+  background-color:#19A15E;
+  list-style: none;
+  display: inline-block;
+  width:auto;
+  padding:5%;
+  margin:1%;
+  font-size:1.5em;
+  border-radius:5px;
+  border-bottom:8px solid transparent;
+  border-top:8px solid transparent;
+  color:#fff;
+  cursor: pointer;
+  -webkit-transition:border .5s, transform .2s;
+}
+
+#gov-office li:hover{
+  border-bottom:8px solid #E81B47;
+  border-top:8px solid #E81B47;
+  transform: scale(1.05);
 }
