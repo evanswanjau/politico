@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>sign up</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/main.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div class="form-holder">
+      <form class="ui-form" name="myForm" action="" method="post">
+        <h1>Welcome to Politico</h1>
+        <h2>sign up</h2><br>
+        <p id="responseMessage"></p>
+        <input class="mini-input" type="text" name="fname" placeholder="first name">
+        <input class="mini-input" type="text" name="sname" placeholder="second name"><br><br>
+        <input type="text" name="nationalid" placeholder="national ID"><br><br>
+        <input type="password" name="password" placeholder="password"><br><br>
+        <input type="password" name="confirm-password" placeholder="confirm password"><br><br>
+        <input type="submit" name="signup" value="sign up" onclick="return signupUser()"><br><br>
+        <p>Already have an account? <a href="signin.html">sign in</a></p>
+      </form>
+    </div>
+  </body>
+</html>
