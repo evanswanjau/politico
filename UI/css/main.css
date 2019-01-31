@@ -85,3 +85,20 @@ body {
   box-shadow: 0 3px #0d512f;
   transform: translateY(2px);
 }
+
+/*
+------------------------------------------------
+admin pages design
+------------------------------------------------
+*/
+.main-holder{
+  padding:5%;
+  text-align: center;
+}
+
+.main-holder h1{
+  text-align: left;
+  padding-bottom:1%;
+  border-bottom:1px solid #19A15E;
+  color:#19A15E;
+}
