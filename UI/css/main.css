@@ -182,7 +182,8 @@ voting pages design
 .item:hover{
   background-color:#19A15E;
   color:#fff;
-  transform: scale(1.05);
+  box-shadow:none;
+  transform:scale(1.03);
 }
 
 .item li{
