@@ -236,6 +236,8 @@ nav{
 }
 
 nav li{
+  width:8%;
+  text-align: center;
   padding:1%;
   list-style: none;
   display: inline-block;
@@ -252,7 +254,6 @@ nav a:hover{
 }
 
 nav a{
-  width:auto;
   color:#dfdfdf;
   text-decoration: none;
 }
@@ -268,6 +269,7 @@ nav a{
 
 .right-links li{
   padding:4%;
+  width: auto;
 }
 
 
