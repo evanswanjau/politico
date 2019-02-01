@@ -252,6 +252,7 @@ nav a:hover{
 }
 
 nav a{
+  display: block;
   color:#dfdfdf;
   text-decoration: none;
 }
@@ -272,5 +273,26 @@ nav a{
 
 .current{
   border-bottom:3px solid #fff;
+  color:#fff;
+}
+
+footer{
+  padding:1%;
+  text-align: center;
+}
+
+footer p{
+  color:#19A15E;
+}
+
+footer a{
+  color:#000;
+}
+
+.out{
+  margin-bottom: 1%!important;
+}
+
+.out p{
   color:#fff;
 }
