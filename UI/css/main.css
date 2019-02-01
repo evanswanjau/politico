@@ -205,7 +205,7 @@ voting pages design
   background-color:#19A15E;
   color:#fff;
   box-shadow:none;
-  transform:scale(1.03);
+  transform:scale(1.015);
 }
 
 .item li{
@@ -223,4 +223,54 @@ voting pages design
   background-color:transparent;
   color:#666;
   transform:none;
+}
+
+/*
+------------------------------------------------
+nav design
+------------------------------------------------
+*/
+
+nav{
+  background-color:#19A15E;
+}
+
+nav li{
+  padding:1%;
+  list-style: none;
+  display: inline-block;
+  border-bottom:3px solid transparent;
+  -webkit-transition: border .5s;
+}
+
+nav li:hover{
+  border-bottom:3px solid #fff;
+}
+
+nav a:hover{
+  color:#fff;
+}
+
+nav a{
+  color:#dfdfdf;
+  text-decoration: none;
+}
+
+
+.right-links{
+  text-align:right;
+  width:25%;
+  position: absolute;
+  right:0;
+  top:0;
+}
+
+.right-links li{
+  padding:4%;
+}
+
+
+.current{
+  border-bottom:3px solid #fff;
+  color:#fff;
 }
