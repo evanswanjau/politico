@@ -252,7 +252,7 @@ nav a:hover{
 }
 
 nav a{
-  display: block;
+  width:auto;
   color:#dfdfdf;
   text-decoration: none;
 }
