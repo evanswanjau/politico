@@ -72,6 +72,6 @@ def get_political_party(party_id):
     party_info = SINGLE_POLITICAL_PARTY.get_specific_political_party(party_id)
 
     return make_response(jsonify({
-        "data": party_info,
-        "status": "Ok"
+        "status":200,
+        "data": party_info
     }), 200)
