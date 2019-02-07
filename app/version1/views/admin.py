@@ -85,3 +85,17 @@ def edit_political_party(party_id):
         "status": 201,
         "data": updated_party
     }), 201)
+
+
+# get a specific political party
+@bp.route('/api/v1/delete-political-party/<int:party_id>', methods=['DELETE'])
+def delete_political_party(party_id):
+
+    DELETE_POLITICAL_PARTY = PoliticalParty(party_id=party_id, party_data=party_list)
+
+    message = DELETE_POLITICAL_PARTY.delete_political_party()
+
+    return make_response(jsonify({
+        "status": 201,
+        "message": message,
+    }), 201)
