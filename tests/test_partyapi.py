@@ -6,6 +6,7 @@ def test_hello_world(client):
     assert response.data == b'Hello, World!'
 
 
+# test to create political party
 def test_create_political_party(client):
     """ Tests whether the api can create a political party """
     party_data = {
@@ -23,7 +24,9 @@ def test_create_political_party(client):
     assert json.loads(response.data) == {"data": [{"id": 3,"name": "green party"}],"status": 200}
 
 
+# test to validate existing data
 def test_validate_existing_data(client):
+    """ Tests whether the api can validate existing data"""
     party_data = {
 	           "id": 1,
                "name": "green party",
@@ -36,10 +39,12 @@ def test_validate_existing_data(client):
 
     response = client.post(url, json=party_data)
     assert response.status_code == 409
-    assert json.loads(response.data) == {'error': 'Already Exists'}
+    assert json.loads(response.data) == {'status': 409, 'error': 'Already Exists'}
 
 
+# test to validate empty data
 def test_validate_empty_data(client):
+    """ Tests whether the api can create a calid request """
     party_data = {
 	           "id": 5,
                "name": "",
@@ -52,4 +57,11 @@ def test_validate_empty_data(client):
 
     response = client.post(url, json=party_data)
     assert response.status_code == 400
-    assert json.loads(response.data) == {'error': 'Invalid Request'}
+    assert json.loads(response.data) == {'status': 400, 'error': 'Invalid Request'}
+
+
+# test to get all political parties
+def test_all_political_parties(client):
+    """ Test get all political parties """
+    response = client.get('/api/v1/political-parties')
+    assert response.status_code == 200
