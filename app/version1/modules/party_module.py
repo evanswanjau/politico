@@ -5,7 +5,7 @@ class PoliticalParty():
 
     """ Methods and Attrinutes for PoliticalParty. """
 
-    def __init__(self, party_id, party_name, chairman, hqaddress, logoUrl, party_data):
+    def __init__(self, party_id=None, party_name=None, chairman=None, hqaddress=None, logoUrl=None, party_data=None):
         self.party_id = party_id
         self.party_name = party_name
         self.chairman = chairman
@@ -82,3 +82,27 @@ class PoliticalParty():
             "hqaddress":hqaddress,
             "logoUrl":logoUrl
         }
+
+
+    def get_all_political_parties(self):
+        political_parties = []
+        party_data = self.party_data
+        for i in party_data:
+            new_dict = {"id":i["party_id"], "name":i["party_name"], "logoUrl":i["logoUrl"]}
+            political_parties.append(new_dict)
+
+        return political_parties
+
+
+    def get_specific_political_party(self, id):
+        """ This method gets specific political party """
+        if PoliticalParty.check_existence(self, "party_id", id) == False:
+            abort(400)
+        else:
+            for i in self.party_data:
+                if i.get("party_id") == id:
+                    party_data = i
+                    break
+
+
+        return [{"id":party_data["party_id"], "name":party_data["party_name"], "logoUrl":party_data["logoUrl"]}]
