@@ -123,3 +123,15 @@ class PoliticalParty():
                     break
 
         return [{"id":self.party_id, "name":new_party_data["party_name"]}]
+
+
+    def delete_political_party(self):
+        if PoliticalParty.check_existence(self, "party_id", self.party_id) == False:
+            abort(400)
+        else:
+            party_data = self.party_data
+            for i in party_data:
+                if i.get("party_id") == self.party_id:
+                    party_data.remove(i)
+                    break
+            return ["deletion successful"]
