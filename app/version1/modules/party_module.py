@@ -14,10 +14,10 @@ class PoliticalParty():
         self.party_data = party_data
 
 
-    def check_existence(self, key, value):
+    def check_existence(self, key, value, data_list):
         """ Method That Checks Whether a Value Exists """
         return_value = False
-        for i in self.party_data:
+        for i in data_list:
             if i.get(key) == value:
                 return_value = True
                 break
@@ -27,13 +27,12 @@ class PoliticalParty():
 
     def create_party(self):
         """ validate the political party data """
-        errors = {}
 
         # party id
         if not self.party_id:
             abort(400)
         else:
-            if PoliticalParty.check_existence(self, "party_id", self.party_id):
+            if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data):
                 abort(409)
             else:
                 party_id = self.party_id
@@ -42,7 +41,7 @@ class PoliticalParty():
         if self.party_name == "":
             abort(400)
         else:
-            if PoliticalParty.check_existence(self, "party_name", self.party_name):
+            if PoliticalParty.check_existence(self, "party_name", self.party_name, self.party_data):
                 abort(409)
             else:
                 party_name = self.party_name
@@ -51,7 +50,7 @@ class PoliticalParty():
         if not self.chairman:
             abort(400)
         else:
-            if PoliticalParty.check_existence(self, "chairman", self.chairman):
+            if PoliticalParty.check_existence(self, "chairman", self.chairman, self.party_data):
                 abort(409)
             else:
                 chairman = self.chairman
@@ -60,7 +59,7 @@ class PoliticalParty():
         if not self.hqaddress:
             abort(400)
         else:
-            if PoliticalParty.check_existence(self, "hqaddress", self.hqaddress):
+            if PoliticalParty.check_existence(self, "hqaddress", self.hqaddress, self.party_data):
                 abort(409)
             else:
                 hqaddress = self.hqaddress
@@ -69,7 +68,7 @@ class PoliticalParty():
         if not self.logoUrl:
             abort(400)
         else:
-            if PoliticalParty.check_existence(self, "logoUrl", self.logoUrl):
+            if PoliticalParty.check_existence(self, "logoUrl", self.logoUrl, self.party_data):
                 abort(409)
             else:
                 logoUrl = self.logoUrl
@@ -97,7 +96,7 @@ class PoliticalParty():
 
     def get_specific_political_party(self, id):
         """ This method gets specific political party """
-        if PoliticalParty.check_existence(self, "party_id", id) == False:
+        if PoliticalParty.check_existence(self, "party_id", id, self.party_data) == False:
             abort(400)
         else:
             for i in self.party_data:
@@ -110,7 +109,7 @@ class PoliticalParty():
 
 
     def edit_political_party(self):
-        if PoliticalParty.check_existence(self, "party_id", self.party_id) == False:
+        if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data) == False:
             abort(400)
         else:
             for i in self.party_data:
@@ -126,7 +125,7 @@ class PoliticalParty():
 
 
     def delete_political_party(self):
-        if PoliticalParty.check_existence(self, "party_id", self.party_id) == False:
+        if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data) == False:
             abort(400)
         else:
             party_data = self.party_data

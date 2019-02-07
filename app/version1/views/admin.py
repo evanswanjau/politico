@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, request, jsonify, make_response, json
 from ..modules.party_module import PoliticalParty
+from ..modules.office_module import GovernmentOffice
 
 bp = Blueprint('admin', __name__, url_prefix='/')
 
@@ -24,13 +25,27 @@ party_list = [
 ]
 
 
+office_list = [
+    {
+        "id": 1,
+        "type": "state",
+        "name": "president"
+    },
+    {
+        "id": 2,
+        "type": "state",
+        "name": "vice president"
+    }
+]
+
+
 # create political party endpoint
 @bp.route('/api/v1/create-political-party', methods=['POST'])
 def create_political_party():
     """ Create political party emdpoint """
     data = request.get_json()
 
-    POLITICAL_PARTY = PoliticalParty(data['id'], data['name'], data['chairman'], data['hqaddress'], data['logoUrl'], party_list)
+    POLITICAL_PARTY = PoliticalParty(data['party_id'], data['party_name'], data['chairman'], data['hqaddress'], data['logoUrl'], party_list)
 
     new_party = POLITICAL_PARTY.create_party()
 
@@ -87,7 +102,7 @@ def edit_political_party(party_id):
     }), 201)
 
 
-# get a specific political party
+# delete a specific political party
 @bp.route('/api/v1/delete-political-party/<int:party_id>', methods=['DELETE'])
 def delete_political_party(party_id):
 
@@ -99,3 +114,28 @@ def delete_political_party(party_id):
         "status": 201,
         "message": message,
     }), 201)
+
+
+
+#------------------------------------------------------
+# Government Office API's
+#------------------------------------------------------
+
+# create a government Office API
+@bp.route('/api/v1/create-gov-office', methods=['POST'])
+def create_government_office():
+
+    """ Create government office endpoint """
+
+    data = request.get_json()
+
+    OFFICE = GovernmentOffice(data['id'], data['type'], data['name'], office_list)
+
+    new_office = OFFICE.create_office()
+
+    office_list.append(new_office)
+
+    return make_response(jsonify({
+        "status": 200,
+        "data": [new_office]
+    }), 200)
