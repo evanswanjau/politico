@@ -21,7 +21,7 @@ def test_create_political_party(client):
 
     response = client.post(url, json=party_data)
     assert response.status_code == 200
-    assert json.loads(response.data) == {"data": [{"id": 3,"name": "green party"}],"status": 200}
+    assert json.loads(response.data) == {"status": 200, "data": [{"id": 3,"name": "green party"}]}
 
 
 # test to validate existing data
@@ -67,6 +67,7 @@ def test_all_political_parties(client):
     assert response.status_code == 200
 
 
+# test to get a specific political party
 def test_get_specific_political_party(client):
     """ Test a single political party """
     response = client.get('/api/v1/political-party/1')
@@ -75,3 +76,21 @@ def test_get_specific_political_party(client):
     assert response.status_code == 404
     response = client.get('/api/v1/political-party/78')
     assert response.status_code == 400
+
+
+# test to edit a political party
+def test_edit_political_party(client):
+    """ Test the editing of a political party """
+    party_data = {
+	           "id": 1,
+               "name": "new updated party",
+               "chairman": "hammer delta",
+               "hqaddress": "76 J Street",
+               "logoUrl": "political_party.img"
+        }
+
+    url = '/api/v1/edit-political-party/1'
+
+    response = client.patch(url, json=party_data)
+    assert response.status_code == 201
+    assert json.loads(response.data) == {"status": 201, "data": [{"id": 1,"name": "new updated party"}]}

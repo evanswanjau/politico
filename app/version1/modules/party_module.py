@@ -85,6 +85,7 @@ class PoliticalParty():
 
 
     def get_all_political_parties(self):
+        """ This method gets all political parties """
         political_parties = []
         party_data = self.party_data
         for i in party_data:
@@ -106,3 +107,19 @@ class PoliticalParty():
 
 
         return [{"id":party_data["party_id"], "name":party_data["party_name"], "logoUrl":party_data["logoUrl"]}]
+
+
+    def edit_political_party(self):
+        if PoliticalParty.check_existence(self, "party_id", self.party_id) == False:
+            abort(400)
+        else:
+            for i in self.party_data:
+                if i.get("party_id") == self.party_id:
+                    i["party_name"] = self.party_name
+                    i["chairman"] = self.chairman
+                    i["party_name"] = self.party_name
+                    i["chairman"] = self.chairman
+                    new_party_data = i
+                    break
+
+        return [{"id":self.party_id, "name":new_party_data["party_name"]}]

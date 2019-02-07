@@ -30,12 +30,6 @@ def create_political_party():
     """ Create political party emdpoint """
     data = request.get_json()
 
-    id = data['id']
-    name = data['name']
-    chairman = data['chairman']
-    hqaddress = data['hqaddress']
-    logoUrl = data['logoUrl']
-
     POLITICAL_PARTY = PoliticalParty(data['id'], data['name'], data['chairman'], data['hqaddress'], data['logoUrl'], party_list)
 
     new_party = POLITICAL_PARTY.create_party()
@@ -75,3 +69,19 @@ def get_political_party(party_id):
         "status":200,
         "data": party_info
     }), 200)
+
+
+# edit a specific political party
+@bp.route('/api/v1/edit-political-party/<int:party_id>', methods=['PATCH'])
+def edit_political_party(party_id):
+    """ This will enable the update of a political party """
+    data = request.get_json()
+
+    EDIT_POLITICAL_PARTY = PoliticalParty(party_id, data['name'], data['chairman'], data['hqaddress'], data['logoUrl'], party_list)
+
+    updated_party = EDIT_POLITICAL_PARTY.edit_political_party()
+
+    return make_response(jsonify({
+        "status": 201,
+        "data": updated_party
+    }), 201)
