@@ -10,12 +10,16 @@ party_list = [
     {
         "party_id": 1,
         "party_name": "blue party",
-        "chairman": "hammer delta"
+        "chairman": "hammer delta",
+        "hqaddress":"474 Major Road",
+        "logoUrl":"blueparty.img"
     },
     {
         "party_id": 2,
         "party_name": "red party",
-        "chairman": "glazer chimmy"
+        "chairman": "glazer chimmy",
+        "hqaddress":"90 Fifth Street",
+        "logoUrl":"redparty.img"
     }
 ]
 
@@ -47,7 +51,27 @@ def create_political_party():
 # view all political parties
 @bp.route('/api/v1/political-parties', methods=['GET'])
 def political_parties():
+
+    POLITICAL_PARTIES = PoliticalParty(party_data=party_list)
+
+    political_parties = POLITICAL_PARTIES.get_all_political_parties()
+
     return make_response(jsonify({
-        "political_parties": party_list,
-        "status": "Ok"
+        "status": 200,
+        "data": political_parties
+    }), 200)
+
+
+# get a specific political party
+@bp.route('/api/v1/political-party/<int:party_id>', methods=['GET'])
+def get_political_party(party_id):
+    """ Get a specific political party """
+
+    SINGLE_POLITICAL_PARTY = PoliticalParty(party_data=party_list)
+
+    party_info = SINGLE_POLITICAL_PARTY.get_specific_political_party(party_id)
+
+    return make_response(jsonify({
+        "status":200,
+        "data": party_info
     }), 200)

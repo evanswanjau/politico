@@ -65,3 +65,13 @@ def test_all_political_parties(client):
     """ Test get all political parties """
     response = client.get('/api/v1/political-parties')
     assert response.status_code == 200
+
+
+def test_get_specific_political_party(client):
+    """ Test a single political party """
+    response = client.get('/api/v1/political-party/1')
+    assert response.status_code == 200
+    response = client.get('/api/v1/political-party/t')
+    assert response.status_code == 404
+    response = client.get('/api/v1/political-party/78')
+    assert response.status_code == 400
