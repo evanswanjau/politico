@@ -44,7 +44,7 @@ def test_validate_existing_data(client):
 
 # test to validate empty data
 def test_validate_empty_data(client):
-    """ Tests whether the api can create a calid request """
+    """ Tests whether the api can create an invalid request """
     party_data = {
 	           "id": 5,
                "name": "",
@@ -94,3 +94,13 @@ def test_edit_political_party(client):
     response = client.patch(url, json=party_data)
     assert response.status_code == 201
     assert json.loads(response.data) == {"status": 201, "data": [{"id": 1,"name": "new updated party"}]}
+
+
+# test to delete a political party
+def test_delete_political_party(client):
+    """ Test deletion of a political party """
+    response = client.delete('/api/v1/delete-political-party/1')
+    assert response.status_code == 201
+    assert json.loads(response.data) == {"status": 201, "message": ["deletion successful"]}
+    response = client.delete('/api/v1/delete-political-party/78')
+    assert response.status_code == 400
