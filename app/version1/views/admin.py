@@ -141,7 +141,7 @@ def create_government_office():
     }), 200)
 
 
-# view all political parties
+# view all government offices
 @bp.route('/api/v1/government-offices', methods=['GET'])
 def government_offices():
 
@@ -152,4 +152,19 @@ def government_offices():
     return make_response(jsonify({
         "status": 200,
         "data": government_offices
+    }), 200)
+
+
+# get a specific government office
+@bp.route('/api/v1/government-office/<int:office_id>', methods=['GET'])
+def get_government_office(office_id):
+    """ Get a specific government office """
+
+    SINGLE_OFFICE = GovernmentOffice(office_data=office_list)
+
+    office_info = SINGLE_OFFICE.get_specific_government_office(office_id)
+
+    return make_response(jsonify({
+        "status":200,
+        "data": office_info
     }), 200)

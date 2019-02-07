@@ -21,3 +21,14 @@ def test_all_government_offices(client):
     """ Test get all government offices """
     response = client.get('/api/v1/government-offices')
     assert response.status_code == 200
+
+
+# test to get a specific political party
+def test_get_specific_political_party(client):
+    """ Test a single political party """
+    response = client.get('/api/v1/government-office/1')
+    assert response.status_code == 200
+    response = client.get('/api/v1/government-office/t')
+    assert response.status_code == 404
+    response = client.get('/api/v1/government-office/78')
+    assert response.status_code == 400
