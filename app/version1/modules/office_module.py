@@ -57,3 +57,17 @@ class GovernmentOffice(PoliticalParty):
             offices.append(new_dict)
 
         return offices
+
+
+    def get_specific_government_office(self, id):
+        """ This method gets specific government office """
+        if PoliticalParty.check_existence(self, "id", id, self.office_data) == False:
+            abort(400)
+        else:
+            for i in self.office_data:
+                if i.get("id") == id:
+                    office_data = i
+                    break
+
+
+        return [office_data]
