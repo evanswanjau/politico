@@ -10,8 +10,8 @@ def test_hello_world(client):
 def test_create_political_party(client):
     """ Tests whether the api can create a political party """
     party_data = {
-	           "id": 3,
-               "name": "green party",
+	           "party_id": 3,
+               "party_name": "green party",
                "chairman": "hammer deltassds",
                "hqaddress": "76 J Street",
                "logoUrl": "political_party.img"
@@ -28,8 +28,8 @@ def test_create_political_party(client):
 def test_validate_existing_data(client):
     """ Tests whether the api can validate existing data"""
     party_data = {
-	           "id": 1,
-               "name": "green party",
+	           "party_id": 1,
+               "party_name": "green party",
                "chairman": "hammer deltas",
                "hqaddress": "76 J Street",
                "logoUrl": "political_party.img"
@@ -46,8 +46,8 @@ def test_validate_existing_data(client):
 def test_validate_empty_data(client):
     """ Tests whether the api can create an invalid request """
     party_data = {
-	           "id": 5,
-               "name": "",
+	           "party_id": 5,
+               "party_name": "",
                "chairman": "hammer delta",
                "hqaddress": "76 J Street",
                "logoUrl": "political_party.img"
