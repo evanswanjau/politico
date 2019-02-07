@@ -46,3 +46,14 @@ class GovernmentOffice(PoliticalParty):
             "type": type,
             "name": name,
         }
+
+
+    def get_all_government_offices(self):
+        """ This method gets all government offices """
+        offices = []
+        office_data = self.office_data
+        for i in office_data:
+            new_dict = {"id":i["id"], "type":i["type"], "name":i["name"]}
+            offices.append(new_dict)
+
+        return offices
