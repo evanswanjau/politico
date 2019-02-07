@@ -23,6 +23,7 @@ party_list = [
 # create political party endpoint
 @bp.route('/api/v1/create-political-party', methods=['POST'])
 def create_political_party():
+    """ Create political party emdpoint """
     data = request.get_json()
 
     id = data['id']
@@ -40,4 +41,13 @@ def create_political_party():
     return make_response(jsonify({
         "status": 200,
         "data": [{"id":new_party.get("party_id"), "name":new_party.get("party_name")}]
+    }), 200)
+
+
+# view all political parties
+@bp.route('/api/v1/political-parties', methods=['GET'])
+def political_parties():
+    return make_response(jsonify({
+        "political_parties": party_list,
+        "status": "Ok"
     }), 200)
