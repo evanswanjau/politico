@@ -8,5 +8,4 @@ cache: pip
 install:
   - pip install -r requirements.txt
 script:
-  - python tests/test_officeapi.py
-  - python tests/test_party_api.py
+  - python conftest.py
