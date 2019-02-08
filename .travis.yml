@@ -6,7 +6,7 @@ python:
 install:
   - pip install pytest
   - pip install coveralls
-
+  - pip install flask
 
 script:
  - pytest tests/test_partyapi.py
