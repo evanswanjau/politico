@@ -45,11 +45,6 @@ def create_app(test_config=None):
     def already_exists(error):
         return make_response(jsonify({'status': 409, 'error': 'Already Exists'}), 409)
 
-    # a simple page that says hello
-    @app.route('/')
-    def hello():
-        return 'Hello, World!'
-
     from .version1.views import admin
     app.register_blueprint(admin.bp)
 
