@@ -6,6 +6,15 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
+    # a simple page that says hello
+    @app.route('/')
+    def hello():
+        return 'Hello, World!'
+
+
+    from .version1.views import admin
+    app.register_blueprint(admin.bp)
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('conftest.py', silent=True)
@@ -40,10 +49,5 @@ def create_app(test_config=None):
     @app.errorhandler(409)
     def already_exists(error):
         return make_response(jsonify({'status': 409, 'error': 'Already Exists'}), 409)
-
-    # a simple page that says hello
-    @app.route('/')
-    def hello():
-        return 'Hello, World!'
 
     return app
