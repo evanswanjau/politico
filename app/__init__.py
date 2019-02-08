@@ -5,7 +5,7 @@ from flask import Flask, make_response, jsonify
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('conftest.py', silent=True)
@@ -45,8 +45,5 @@ def create_app(test_config=None):
     @app.route('/')
     def hello():
         return 'Hello, World!'
-
-    from .version1.views import admin
-    app.register_blueprint(admin.bp)
 
     return app
