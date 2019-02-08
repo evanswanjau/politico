@@ -2,7 +2,7 @@ from flask import Flask, Blueprint, request, jsonify, make_response, json
 from ..modules.party_module import PoliticalParty
 from ..modules.office_module import GovernmentOffice
 
-bp = Blueprint('admin', __name__, url_prefix='/')
+bp = Blueprint('admin', __name__, url_prefix='/api/v1/')
 
 app = Flask(__name__)
 
@@ -40,7 +40,7 @@ office_list = [
 
 
 # create political party endpoint
-@bp.route('/api/v1/create-political-party', methods=['POST'])
+@bp.route('create-political-party', methods=['POST'])
 def create_political_party():
     """ Create political party emdpoint """
     data = request.get_json()
@@ -58,7 +58,7 @@ def create_political_party():
 
 
 # view all political parties
-@bp.route('/api/v1/political-parties', methods=['GET'])
+@bp.route('political-parties', methods=['GET'])
 def political_parties():
 
     POLITICAL_PARTIES = PoliticalParty(party_data=party_list)
@@ -72,7 +72,7 @@ def political_parties():
 
 
 # get a specific political party
-@bp.route('/api/v1/political-party/<int:party_id>', methods=['GET'])
+@bp.route('political-party/<int:party_id>', methods=['GET'])
 def get_political_party(party_id):
     """ Get a specific political party """
 
@@ -87,7 +87,7 @@ def get_political_party(party_id):
 
 
 # edit a specific political party
-@bp.route('/api/v1/edit-political-party/<int:party_id>', methods=['PATCH'])
+@bp.route('edit-political-party/<int:party_id>', methods=['PATCH'])
 def edit_political_party(party_id):
     """ This will enable the update of a political party """
     data = request.get_json()
@@ -103,7 +103,7 @@ def edit_political_party(party_id):
 
 
 # delete a specific political party
-@bp.route('/api/v1/delete-political-party/<int:party_id>', methods=['DELETE'])
+@bp.route('delete-political-party/<int:party_id>', methods=['DELETE'])
 def delete_political_party(party_id):
 
     DELETE_POLITICAL_PARTY = PoliticalParty(party_id=party_id, party_data=party_list)
@@ -122,7 +122,7 @@ def delete_political_party(party_id):
 #------------------------------------------------------
 
 # create a government Office API
-@bp.route('/api/v1/create-gov-office', methods=['POST'])
+@bp.route('create-gov-office', methods=['POST'])
 def create_government_office():
 
     """ Create government office endpoint """
@@ -142,7 +142,7 @@ def create_government_office():
 
 
 # view all government offices
-@bp.route('/api/v1/government-offices', methods=['GET'])
+@bp.route('government-offices', methods=['GET'])
 def government_offices():
 
     OFFICES = GovernmentOffice(office_data=office_list)
@@ -156,7 +156,7 @@ def government_offices():
 
 
 # get a specific government office
-@bp.route('/api/v1/government-office/<int:office_id>', methods=['GET'])
+@bp.route('government-office/<int:office_id>', methods=['GET'])
 def get_government_office(office_id):
     """ Get a specific government office """
 
