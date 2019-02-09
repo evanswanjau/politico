@@ -10,7 +10,7 @@ install:
 cache: pip
 
 script:
- - pytest tests/test_partyapi.py
+ - pytest
 
 after_success:
   - coveralls
