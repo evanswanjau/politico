@@ -1,8 +1,9 @@
+""" This is the Application Initialization Method """
 import os
-
 from flask import Flask, make_response, jsonify
 
 def create_app(test_config=None):
+    """ Method to Build The APP """
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
@@ -47,6 +48,6 @@ def create_app(test_config=None):
         return 'Hello, World!'
 
     from .version1.views import admin
-    app.register_blueprint(admin.bp)
+    app.register_blueprint(admin.BP)
 
     return app

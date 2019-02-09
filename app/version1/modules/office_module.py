@@ -2,70 +2,59 @@
 from flask import abort
 from .party_module import PoliticalParty
 
-class GovernmentOffice(PoliticalParty):
+class GovernmentOffice():
 
     """ Methods and Attributes for GovernmentOffice. """
 
-    def __init__(self, id=None, type=None, name=None, office_data=None):
-        self.id = id
-        self.type = type
+    def __init__(self, office_id=None, office_type=None, name=None, office_data=None):
+        self.office_id = office_id
+        self.office_type = office_type
         self.name = name
         self.office_data = office_data
 
 
     def create_office(self):
-
+        """ This Method Will Take Care of Validating Office Data """
         # id
-        if not self.id:
+        if not self.office_id:
             abort(400)
         else:
-            if GovernmentOffice.check_existence(self, "id", self.id, self.office_data):
+            if PoliticalParty.check_existence(self, "office_id", self.office_id, self.office_data):
                 abort(409)
             else:
-                id = self.id
+                office_id = self.office_id
 
-        # type
-        if not self.type:
+        # office_type
+        if not self.office_type:
             abort(400)
         else:
-            type = self.type
+            office_type = self.office_type
 
 
         # name
         if not self.name:
             abort(400)
         else:
-            if GovernmentOffice.check_existence(self, "name", self.name, self.office_data):
+            if PoliticalParty.check_existence(self, "name", self.name, self.office_data):
                 abort(409)
             else:
                 name = self.name
 
 
         return {
-            "id": id,
-            "type": type,
+            "id": office_id,
+            "type": office_type,
             "name": name,
         }
 
 
-    def get_all_government_offices(self):
-        """ This method gets all government offices """
-        offices = []
-        office_data = self.office_data
-        for i in office_data:
-            new_dict = {"id":i["id"], "type":i["type"], "name":i["name"]}
-            offices.append(new_dict)
-
-        return offices
-
-
-    def get_specific_government_office(self, id):
+    def get_specific_government_office(self, office_id):
         """ This method gets specific government office """
-        if PoliticalParty.check_existence(self, "id", id, self.office_data) == False:
+        if not PoliticalParty.check_existence(self, "id", office_id, self.office_data):
             abort(400)
         else:
             for i in self.office_data:
-                if i.get("id") == id:
+                if i.get("id") == office_id:
                     office_data = i
                     break
 
