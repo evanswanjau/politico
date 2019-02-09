@@ -25,53 +25,29 @@ class PoliticalParty():
         return return_value
 
 
+    def check_empty_and_check_existence(self, key, value, data=self.party_data):
+        """ This method validates empty data or non existing data """
+        if not value or value == "":
+            abort(400)
+        elif PoliticalParty.check_existence(self, key, value, data):
+            abort(409)
+        else:
+            return value
+
+
     def create_party(self):
         """ validate the political party data """
 
         # party id
-        if not self.party_id:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data):
-                abort(409)
-            else:
-                party_id = self.party_id
-
+        party_id = check_empty_and_check_existence(self, "party_id", self.party_id)
         # party name
-        if self.party_name == "":
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "party_name", self.party_name, self.party_data):
-                abort(409)
-            else:
-                party_name = self.party_name
-
+        party_name = check_empty_and_check_existence(self, "party_name", self.party_name)
         # chairman
-        if not self.chairman:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "chairman", self.chairman, self.party_data):
-                abort(409)
-            else:
-                chairman = self.chairman
-
+        chairman = check_empty_and_check_existence(self, "chairman", self.chairman, self.chairman)
         # hqaddress
-        if not self.hqaddress:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "hqaddress", self.hqaddress, self.party_data):
-                abort(409)
-            else:
-                hqaddress = self.hqaddress
-
+        hqaddress = check_empty_and_check_existence(self, "hqaddress", self.hqaddress, self.hqaddress)
         # logoUrl
-        if not self.logo_url:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "logoUrl", self.logo_url, self.party_data):
-                abort(409)
-            else:
-                logo_url = self.logo_url
+        logo_url = check_empty_and_check_existence(self, "logoUrl", self.logo_url,self.logo_url)
 
 
         return {
