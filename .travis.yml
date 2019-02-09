@@ -10,7 +10,7 @@ install:
 cache: pip
 
 script:
- - pytest
+ - pytest tests
 
 after_success:
   - coveralls
