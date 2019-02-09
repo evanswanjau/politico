@@ -1,3 +1,4 @@
+""" These are all the tests Concerned with Government Office API """
 import simplejson as json
 
 # test to create government office
@@ -13,7 +14,9 @@ def test_create_government_office(client):
 
     response = client.post(url, json=party_data)
     assert response.status_code == 200
-    assert json.loads(response.data) == {"status": 200, "data": [{"id": 3, "type":"state", "name": "prime minister"}]}
+    assert json.loads(response.data) == {"status": 200,
+                                         "data": [{"id": 3, "type":"state",
+                                                   "name": "prime minister"}]}
 
 
 # test to get all government offices

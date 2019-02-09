@@ -1,18 +1,18 @@
 """ A class to handle the political party object """
-from flask import jsonify, abort
+from flask import abort
 
 class PoliticalParty():
 
     """ Methods and Attrinutes for PoliticalParty. """
 
-    def __init__(self, party_id=None, party_name=None, chairman=None, hqaddress=None, logoUrl=None, party_data=None):
+    def __init__(self, party_id=None, party_name=None, chairman=None,
+                 hqaddress=None, logo_url=None, party_data=None):
         self.party_id = party_id
         self.party_name = party_name
         self.chairman = chairman
         self.hqaddress = hqaddress
-        self.logoUrl = logoUrl
+        self.logo_url = logo_url
         self.party_data = party_data
-
 
     def check_existence(self, key, value, data_list):
         """ Method That Checks Whether a Value Exists """
@@ -65,13 +65,13 @@ class PoliticalParty():
                 hqaddress = self.hqaddress
 
         # logoUrl
-        if not self.logoUrl:
+        if not self.logo_url:
             abort(400)
         else:
-            if PoliticalParty.check_existence(self, "logoUrl", self.logoUrl, self.party_data):
+            if PoliticalParty.check_existence(self, "logoUrl", self.logo_url, self.party_data):
                 abort(409)
             else:
-                logoUrl = self.logoUrl
+                logo_url = self.logo_url
 
 
         return {
@@ -79,7 +79,7 @@ class PoliticalParty():
             "party_name": party_name,
             "chairman": chairman,
             "hqaddress":hqaddress,
-            "logoUrl":logoUrl
+            "logoUrl":logo_url
         }
 
 
@@ -94,22 +94,24 @@ class PoliticalParty():
         return political_parties
 
 
-    def get_specific_political_party(self, id):
+    def get_specific_political_party(self, party_id):
         """ This method gets specific political party """
-        if PoliticalParty.check_existence(self, "party_id", id, self.party_data) == False:
+        if not PoliticalParty.check_existence(self, "party_id", party_id, self.party_data):
             abort(400)
         else:
             for i in self.party_data:
-                if i.get("party_id") == id:
+                if i.get("party_id") == party_id:
                     party_data = i
                     break
 
-
-        return [{"id":party_data["party_id"], "name":party_data["party_name"], "logoUrl":party_data["logoUrl"]}]
+        return [{"id":party_data["party_id"], "name":party_data["party_name"],
+                 "logoUrl":party_data["logoUrl"]}]
 
 
     def edit_political_party(self):
-        if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data) == False:
+        """ This method edits a specific political party """
+        if not PoliticalParty.check_existence(self, "party_id", self.party_id,
+                                              self.party_data):
             abort(400)
         else:
             for i in self.party_data:
@@ -125,7 +127,9 @@ class PoliticalParty():
 
 
     def delete_political_party(self):
-        if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data) == False:
+        """ This method deletes a specific political party """
+        if not PoliticalParty.check_existence(self, "party_id", self.party_id,
+                                              self.party_data):
             abort(400)
         else:
             party_data = self.party_data
@@ -133,4 +137,5 @@ class PoliticalParty():
                 if i.get("party_id") == self.party_id:
                     party_data.remove(i)
                     break
-            return ["deletion successful"]
+
+        return ["deletion successful"]
