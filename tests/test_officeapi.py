@@ -12,7 +12,7 @@ def test_create_government_office(client):
 
     url = '/api/v1/create-gov-office'
 
-    response = client.post(url, json=party_data)
+    response = client.post(url, data=json.dumps(party_data), content_type='application/json')
     assert response.status_code == 200
     assert json.loads(response.data) == {"status": 200,
                                          "data": [{"id": 3, "type":"state",
