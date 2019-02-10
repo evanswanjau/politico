@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/evanswanjau/politico.svg?branch=develop)](https://travis-ci.com/evanswanjau/politico) [![Coverage Status](https://coveralls.io/repos/github/evanswanjau/politico/badge.svg?branch=develop)](https://coveralls.io/github/evanswanjau/politico?branch=develop) [![Maintainability](https://api.codeclimate.com/v1/badges/b2846981cb310794c2c6/maintainability)](https://codeclimate.com/github/evanswanjau/politico/maintainability)
+[![Build Status](https://travis-ci.com/evanswanjau/politico.svg?branch=develop)](https://travis-ci.com/evanswanjau/politico) [![Coverage Status](https://coveralls.io/repos/github/evanswanjau/politico/badge.png?branch=develop)](https://coveralls.io/github/evanswanjau/politico?branch=develop) [![Maintainability](https://api.codeclimate.com/v1/badges/b2846981cb310794c2c6/maintainability)](https://codeclimate.com/github/evanswanjau/politico/maintainability)
 
 
 # politico
