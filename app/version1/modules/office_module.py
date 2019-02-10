@@ -16,30 +16,13 @@ class GovernmentOffice():
     def create_office(self):
         """ This Method Will Take Care of Validating Office Data """
         # id
-        if not self.office_id:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "office_id", self.office_id, self.office_data):
-                abort(409)
-            else:
-                office_id = self.office_id
-
-        # office_type
-        if not self.office_type:
-            abort(400)
-        else:
-            office_type = self.office_type
-
-
-        # name
-        if not self.name:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "name", self.name, self.office_data):
-                abort(409)
-            else:
-                name = self.name
-
+        office_id = PoliticalParty.check_empty_and_check_existence(self, "id",
+                                                                   self.office_id, self.office_data)
+        # office type
+        office_type = self.office_type if self.office_type else abort(400, 'Invalid Request')
+        # office
+        name = PoliticalParty.check_empty_and_check_existence(self, "name", self.name,
+                                                              self.office_data)
 
         return {
             "id": office_id,
@@ -48,10 +31,10 @@ class GovernmentOffice():
         }
 
 
-    def get_specific_government_office(self, office_id):
+    def get_specific_gov_office(self, office_id):
         """ This method gets specific government office """
         if not PoliticalParty.check_existence(self, "id", office_id, self.office_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             for i in self.office_data:
                 if i.get("id") == office_id:

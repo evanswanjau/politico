@@ -25,53 +25,34 @@ class PoliticalParty():
         return return_value
 
 
+    def check_empty_and_check_existence(self, key, value, data):
+        """ This method validates empty data or non existing data """
+        if not value or value == "":
+            abort(400, 'Invalid Request')
+        elif PoliticalParty.check_existence(self, key, value, data):
+            abort(409, 'Already Exists')
+        else:
+            return value
+
+
     def create_party(self):
         """ validate the political party data """
 
         # party id
-        if not self.party_id:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "party_id", self.party_id, self.party_data):
-                abort(409)
-            else:
-                party_id = self.party_id
-
+        party_id = PoliticalParty.check_empty_and_check_existence(self, "party_id",
+                                                                  self.party_id, self.party_data)
         # party name
-        if self.party_name == "":
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "party_name", self.party_name, self.party_data):
-                abort(409)
-            else:
-                party_name = self.party_name
-
+        party_name = PoliticalParty.check_empty_and_check_existence(self, "party_name",
+                                                                    self.party_name, self.party_data)
         # chairman
-        if not self.chairman:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "chairman", self.chairman, self.party_data):
-                abort(409)
-            else:
-                chairman = self.chairman
-
+        chairman = PoliticalParty.check_empty_and_check_existence(self, "chairman",
+                                                                  self.chairman, self.party_data)
         # hqaddress
-        if not self.hqaddress:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "hqaddress", self.hqaddress, self.party_data):
-                abort(409)
-            else:
-                hqaddress = self.hqaddress
-
+        hqaddress = PoliticalParty.check_empty_and_check_existence(self, "hqaddress",
+                                                                   self.hqaddress, self.party_data)
         # logoUrl
-        if not self.logo_url:
-            abort(400)
-        else:
-            if PoliticalParty.check_existence(self, "logoUrl", self.logo_url, self.party_data):
-                abort(409)
-            else:
-                logo_url = self.logo_url
+        logo_url = PoliticalParty.check_empty_and_check_existence(self, "logoUrl",
+                                                                  self.logo_url, self.party_data)
 
 
         return {
@@ -97,7 +78,7 @@ class PoliticalParty():
     def get_specific_political_party(self, party_id):
         """ This method gets specific political party """
         if not PoliticalParty.check_existence(self, "party_id", party_id, self.party_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             for i in self.party_data:
                 if i.get("party_id") == party_id:
@@ -112,7 +93,7 @@ class PoliticalParty():
         """ This method edits a specific political party """
         if not PoliticalParty.check_existence(self, "party_id", self.party_id,
                                               self.party_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             for i in self.party_data:
                 if i.get("party_id") == self.party_id:
@@ -130,7 +111,7 @@ class PoliticalParty():
         """ This method deletes a specific political party """
         if not PoliticalParty.check_existence(self, "party_id", self.party_id,
                                               self.party_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             party_data = self.party_data
             for i in party_data:

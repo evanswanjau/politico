@@ -1,17 +1,12 @@
+[![Build Status](https://travis-ci.com/evanswanjau/politico.svg?branch=develop)](https://travis-ci.com/evanswanjau/politico)
+
+
 [![Coverage Status](https://coveralls.io/repos/github/evanswanjau/politico/badge.svg?branch=master)](https://coveralls.io/github/evanswanjau/politico?branch=master)
 
-
-https://coveralls.io/repos/github/evanswanjau/politico/badge.svg?branch=master(Coverage Status)!:https://coveralls.io/github/evanswanjau/politico?branch=master
-
-
-{<img src="https://coveralls.io/repos/github/evanswanjau/politico/badge.svg?branch=master" alt="Coverage Status" />}[https://coveralls.io/github/evanswanjau/politico?branch=master]
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
 
-<a href='https://coveralls.io/github/evanswanjau/politico?branch=master'><img src='https://coveralls.io/repos/github/evanswanjau/politico/badge.svg?branch=master' alt='Coverage Status' /></a>
-
-
-.. image:: https://coveralls.io/repos/github/evanswanjau/politico/badge.svg?branch=master
-:target: https://coveralls.io/github/evanswanjau/politico?branch=master
+<a href="https://codeclimate.com/github/codeclimate/codeclimate/maintainability"><img src="https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability" /></a>
 
 
 # politico
