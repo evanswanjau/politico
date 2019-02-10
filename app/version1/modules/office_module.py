@@ -33,13 +33,17 @@ class GovernmentOffice():
 
     def get_specific_gov_office(self, office_id):
         """ This method gets specific government office """
-        if not PoliticalParty.check_existence(self, "id", office_id, self.office_data):
+        value = None
+
+        for i in self.office_data:
+            if i.get("id") == office_id:
+                office_data = [i]
+                value = True
+                break
+            else:
+                value = False
+
+        if not value:
             abort(400, 'Invalid Request')
         else:
-            for i in self.office_data:
-                if i.get("id") == office_id:
-                    office_data = i
-                    break
-
-
-        return [office_data]
+            return office_data

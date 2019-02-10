@@ -5,6 +5,7 @@ python:
 
 install:
   - pip install simplejson
+  - pip install python-coveralls
   - pip install -r requirements.txt
 
 cache: pip
@@ -14,4 +15,3 @@ script:
 
 after_success:
   - coveralls
-  
