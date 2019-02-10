@@ -158,14 +158,14 @@ def government_offices():
 
 # get a specific government office
 @BP.route('government-office/<int:office_id>', methods=['GET'])
-def get_government_office(office_id):
-    """ Get a specific government office """
+def get_gov_office(office_id):
+    """ This method will get a specific office """
 
-    single_office = GovernmentOffice(office_data=office_list)
+    specific_office = GovernmentOffice(office_data=office_list)
 
-    office_info = single_office.get_specific_government_office(office_id)
+    office_data = specific_office.get_specific_gov_office(office_id)
 
     return make_response(jsonify({
         "status":200,
-        "data": office_info
+        "data": office_data
     }), 200)

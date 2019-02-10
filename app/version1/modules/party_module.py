@@ -25,12 +25,12 @@ class PoliticalParty():
         return return_value
 
 
-    def check_empty_and_check_existence(self, key, value, data=self.party_data):
+    def check_empty_and_check_existence(self, key, value, data):
         """ This method validates empty data or non existing data """
         if not value or value == "":
-            abort(400)
+            abort(400, 'Invalid Request')
         elif PoliticalParty.check_existence(self, key, value, data):
-            abort(409)
+            abort(409, 'Already Exists')
         else:
             return value
 
@@ -39,15 +39,20 @@ class PoliticalParty():
         """ validate the political party data """
 
         # party id
-        party_id = check_empty_and_check_existence(self, "party_id", self.party_id)
+        party_id = PoliticalParty.check_empty_and_check_existence(self, "party_id",
+                                                                  self.party_id, self.party_data)
         # party name
-        party_name = check_empty_and_check_existence(self, "party_name", self.party_name)
+        party_name = PoliticalParty.check_empty_and_check_existence(self, "party_name",
+                                                                    self.party_name, self.party_data)
         # chairman
-        chairman = check_empty_and_check_existence(self, "chairman", self.chairman, self.chairman)
+        chairman = PoliticalParty.check_empty_and_check_existence(self, "chairman",
+                                                                  self.chairman, self.party_data)
         # hqaddress
-        hqaddress = check_empty_and_check_existence(self, "hqaddress", self.hqaddress, self.hqaddress)
+        hqaddress = PoliticalParty.check_empty_and_check_existence(self, "hqaddress",
+                                                                   self.hqaddress, self.party_data)
         # logoUrl
-        logo_url = check_empty_and_check_existence(self, "logoUrl", self.logo_url,self.logo_url)
+        logo_url = PoliticalParty.check_empty_and_check_existence(self, "logoUrl",
+                                                                  self.logo_url, self.party_data)
 
 
         return {
@@ -73,7 +78,7 @@ class PoliticalParty():
     def get_specific_political_party(self, party_id):
         """ This method gets specific political party """
         if not PoliticalParty.check_existence(self, "party_id", party_id, self.party_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             for i in self.party_data:
                 if i.get("party_id") == party_id:
@@ -88,7 +93,7 @@ class PoliticalParty():
         """ This method edits a specific political party """
         if not PoliticalParty.check_existence(self, "party_id", self.party_id,
                                               self.party_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             for i in self.party_data:
                 if i.get("party_id") == self.party_id:
@@ -106,7 +111,7 @@ class PoliticalParty():
         """ This method deletes a specific political party """
         if not PoliticalParty.check_existence(self, "party_id", self.party_id,
                                               self.party_data):
-            abort(400)
+            abort(400, 'Invalid Request')
         else:
             party_data = self.party_data
             for i in party_data:
