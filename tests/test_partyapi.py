@@ -70,7 +70,7 @@ def test_get_specific_political_party(client):
 # test to edit a political party
 def test_edit_political_party(client):
     """ Test the editing of a political party """
-    party_data = {"id": 3, "name": "new updated party",
+    party_data = {"id": 3, "party_name": "new updated party",
                   "chairman": "hammer deltassds", "hqaddress": "76 J Street",
                   "logoUrl": "political_party.img"}
 
