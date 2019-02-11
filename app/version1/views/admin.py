@@ -5,9 +5,6 @@ from ..modules.office_module import GovernmentOffice
 
 BP = Blueprint('admin', __name__, url_prefix='/api/v1/')
 
-app = Flask(__name__)
-
-
 party_list = [
     {
         "party_id": 1,
@@ -95,7 +92,7 @@ def edit_political_party(party_id):
     """ This will enable the update of a political party """
     data = request.get_json()
 
-    edit_political_party = PoliticalParty(party_id, data['name'],
+    edit_political_party = PoliticalParty(party_id, data['party_name'],
                                           data['chairman'], data['hqaddress'],
                                           data['logoUrl'], party_list)
 
