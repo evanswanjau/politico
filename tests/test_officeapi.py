@@ -1,37 +1,45 @@
-""" These are all the tests Concerned with Government Office API """
+""" These are all the Tests Concerned with Governmen Office API """
 import simplejson as json
+from tests.test_base import *
+from tests.dummy_data import *
+
+
+"""
+Creating Government Office
+"""
+# test create government office url
+def test_broken_gov_office_url(client):
+    """ Tests whether the url returns the right response """
+    response = create_new_item(client=client, url=broken_gov_url, data=office_data)
+    assert response.status_code == 404
 
 # test to create government office
-def test_create_government_office(client):
-    """ Tests whether the api can create a government office"""
-    party_data = {
-        "id": 3,
-        "type": "state",
-        "name": "prime minister"
-    }
-
-    url = '/api/v1/create-gov-office'
-
-    response = client.post(url, data=json.dumps(party_data), content_type='application/json')
-    assert response.status_code == 200
-    assert json.loads(response.data) == {"status": 200,
-                                         "data": [{"id": 3, "type":"state",
-                                                   "name": "prime minister"}]}
-
-
-# test to get all government offices
-def test_all_government_offices(client):
-    """ Test get all government offices """
-    response = client.get('/api/v1/government-offices')
+def test_create_gov_office(client):
+    """ Tests whether the api can create a government office """
+    response = create_new_item(client=client, url=office_url, data=party_data)
+    assert json.loads(response.data) == successful_office_creation_response
     assert response.status_code == 200
 
 
-# test to get a specific political party
-def test_get_specific_political_party(client):
-    """ Test a single political party """
-    response = client.get('/api/v1/government-office/1')
+# test to validate empty data
+def test_empty_office_data(client):
+    """ Tests whether the api can create a government office """
+    response = create_new_item(client=client, url=office_url, data=empty_office_data)
+    assert json.loads(response.data) == already_exist_party_creation_error
+
+"""
+Get Government Offices
+"""
+# test to get all government office
+def test_get_all_governmnt_offices(client):
+    """ Test to get all government offices """
+    response = get_item(client=client, url=get_all_government_offices_url)
     assert response.status_code == 200
-    response = client.get('/api/v1/government-office/t')
-    assert response.status_code == 404
-    response = client.get('/api/v1/government-office/78')
-    assert response.status_code == 400
+
+
+# test to get a single political party
+def test_get_government_office(client):
+    """ Test to get a single government office """
+    response = get_item(client=client, url=get_government_office_url)
+    assert response.data == expected_single_office_data
+    assert response.status_code == 200
