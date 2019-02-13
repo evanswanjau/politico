@@ -1,5 +1,5 @@
 """ A class to handle the political party object """
-from flask import abort
+from ...error_handlers import *
 
 class PoliticalParty():
 
@@ -28,9 +28,9 @@ class PoliticalParty():
     def check_empty_and_check_existence(self, key, value, data):
         """ This method validates empty data or non existing data """
         if not value or value == "":
-            abort(400, 'Invalid Request')
+            raise ValidationError(key + ' cannot be empty')
         elif PoliticalParty.check_existence(self, key, value, data):
-            abort(409, 'Already Exists')
+            raise ConflictError(key + ' already exists')
         else:
             return value
 
@@ -78,7 +78,7 @@ class PoliticalParty():
     def get_specific_political_party(self, party_id):
         """ This method gets specific political party """
         if not PoliticalParty.check_existence(self, "party_id", party_id, self.party_data):
-            abort(400, 'Invalid Request')
+            raise ValidationError('That politcial party does not exist')
         else:
             for i in self.party_data:
                 if i.get("party_id") == party_id:
@@ -93,7 +93,7 @@ class PoliticalParty():
         """ This method edits a specific political party """
         if not PoliticalParty.check_existence(self, "party_id", self.party_id,
                                               self.party_data):
-            abort(400, 'Invalid Request')
+            raise ValidationError('That politcial party does not exist')
         else:
             for i in self.party_data:
                 if i.get("party_id") == self.party_id:
@@ -111,7 +111,7 @@ class PoliticalParty():
         """ This method deletes a specific political party """
         if not PoliticalParty.check_existence(self, "party_id", self.party_id,
                                               self.party_data):
-            abort(400, 'Invalid Request')
+            raise ValidationError('That politcial party does not exist')
         else:
             party_data = self.party_data
             for i in party_data:
