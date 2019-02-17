@@ -3,6 +3,7 @@ import os
 from flask import Flask, make_response, jsonify
 from instance.config import app_config
 from app.error_handlers import *
+from .version1.views import admin
 
 def create_app(test_config=None):
     """ Method to Build The APP """
@@ -30,7 +31,6 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
-    from .version1.views import admin
-    app.register_blueprint(admin.BP)
+    app.register_blueprint(admin.admin_bp)
 
     return app

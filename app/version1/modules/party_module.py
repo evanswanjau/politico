@@ -98,13 +98,10 @@ class PoliticalParty():
             for i in self.party_data:
                 if i.get("party_id") == self.party_id:
                     i["party_name"] = self.party_name
-                    i["chairman"] = self.chairman
-                    i["party_name"] = self.party_name
-                    i["chairman"] = self.chairman
-                    new_party_data = i
+                    updated_party = i
                     break
 
-        return [{"id":self.party_id, "name":new_party_data["party_name"]}]
+        return updated_party
 
 
     def delete_political_party(self):

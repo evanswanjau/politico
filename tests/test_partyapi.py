@@ -1,92 +1,80 @@
 """ These are all the Tests Concerned with Political Parties API """
 import simplejson as json
+from tests.test_base import *
+from tests.dummy_data import *
 
-def test_hello_world(client):
-    """ Simple Test for Home Page """
-    response = client.get('/')
-    assert response.data == b'Hello, World!'
 
+"""
+Creating Political Party
+"""
+# test create political party url
+def test_broken_political_party_url(client):
+    """ Tests whether the url returns the right response """
+    response = create_new_item(client=client, url=broken_party_url, data=party_data)
+    assert response.status_code == 404
 
 # test to create political party
 def test_create_political_party(client):
     """ Tests whether the api can create a political party """
-    party_data = {"party_id": 3, "party_name": "green party",
-                  "chairman": "hammer deltassds", "hqaddress": "76 J Street",
-                  "logoUrl": "political_party.img"}
-
-    url = '/api/v1/create-political-party'
-
-    response = client.post(url, data=json.dumps(party_data), content_type='application/json')
+    response = create_new_item(client=client, url=party_url, data=party_data)
+    assert json.loads(response.data) == successful_party_creation_response
     assert response.status_code == 200
-    assert json.loads(response.data) == {"status": 200, "data": [{"id": 3, "name": "green party"}]}
-
-
-# test to validate existing data
-def test_validate_existing_data(client):
-    """ Tests whether the api can validate existing data"""
-    party_data = {"party_id": 1, "party_name": "green party",
-                  "chairman": "hammer deltassds", "hqaddress": "76 J Street",
-                  "logoUrl": "political_party.img"}
-
-    url = '/api/v1/create-political-party'
-
-    response = client.post(url, data=json.dumps(party_data), content_type='application/json')
-    assert response.status_code == 409
-    assert json.loads(response.data) == {'status': 409, 'error': 'Already Exists'}
 
 
 # test to validate empty data
-def test_validate_empty_data(client):
-    """ Tests whether the api can create an invalid request """
-    party_data = {"party_id": 5, "party_name": "",
-                  "chairman": "hammer deltassds", "hqaddress": "76 J Street",
-                  "logoUrl": "political_party.img"}
-
-    url = '/api/v1/create-political-party'
-
-    response = client.post(url, data=json.dumps(party_data), content_type='application/json')
-    assert response.status_code == 400
-    assert json.loads(response.data) == {'status': 400, 'error': 'Invalid Request'}
+def test_empty_party_data(client):
+    """ Tests whether the api can create a political party """
+    response = create_new_item(client=client, url=party_url, data=empty_party_data)
+    assert json.loads(response.data) == already_exist_party_creation_error
 
 
-# test to get all political parties
-def test_all_political_parties(client):
-    """ Test get all political parties """
-    response = client.get('/api/v1/political-parties')
-    assert response.status_code == 200
-
-
-# test to get a specific political party
-def test_get_specific_political_party(client):
-    """ Test a single political party """
-    response = client.get('/api/v1/political-party/1')
-    assert response.status_code == 200
-    response = client.get('/api/v1/political-party/t')
-    assert response.status_code == 404
-    response = client.get('/api/v1/political-party/78')
-    assert response.status_code == 400
-
-
-# test to edit a political party
+"""
+Edting Political Party
+"""
+# test to edit political party
 def test_edit_political_party(client):
-    """ Test the editing of a political party """
-    party_data = {"id": 3, "party_name": "new updated party",
-                  "chairman": "hammer deltassds", "hqaddress": "76 J Street",
-                  "logoUrl": "political_party.img"}
-
-    url = '/api/v1/edit-political-party/1'
-
-    response = client.patch(url, data=json.dumps(party_data), content_type='application/json')
+    """ Tests whether the api can edit a political party """
+    response = edit_item(client=client, url=edit_party_url, data=edit_party_data)
+    assert json.loads(response.data) == successful_edit_reponse
     assert response.status_code == 201
-    assert json.loads(response.data) == {"status": 201,
-                                         "data": [{"id": 1, "name": "new updated party"}]}
+
+# test to validate data that doesn't exists
+def test_nonexisting_data(client):
+    """ Test a value that does not exist """
+    response = edit_item(client=client, url=edit_nonexisting_value, data=edit_party_data)
+    assert json.loads(response.data) == expected_edit_nonexisting_error_request
+
+# test to validate type of data value requested
+def test_edit_party_value(client):
+    """ Tests an incorrect value """
+    response = edit_item(client=client, url=edit_invalid_value, data=edit_party_data)
+    assert json.loads(response.data) == expected_edit_response_url_error
 
 
-# test to delete a political party
+"""
+Delete Political Party
+"""
+# test to delete political party
 def test_delete_political_party(client):
-    """ Test deletion of a political party """
-    response = client.delete('/api/v1/delete-political-party/1')
+    """ Test deletion of political party """
+    response = delete_item(client=client, url=delete_party_url)
+    assert json.loads(response.data) == expected_deletion_message
     assert response.status_code == 201
-    assert json.loads(response.data) == {"status": 201, "message": ["deletion successful"]}
-    response = client.delete('/api/v1/delete-political-party/78')
-    assert response.status_code == 400
+
+
+"""
+Get PoliticalParties
+"""
+# test to get all political parties
+def test_get_all_political_parties(client):
+    """ Test to get all political parties """
+    response = get_item(client=client, url=get_all_political_parties_url)
+    assert response.status_code == 200
+
+
+# test to get a single political party
+def test_get_political_party(client):
+    """ Test to get a single political party """
+    response = get_item(client=client, url=get_political_party_url)
+    assert response.data == expected_single_party_data
+    assert response.status_code == 200
