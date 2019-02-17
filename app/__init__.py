@@ -2,6 +2,7 @@
 import os
 from flask import Flask, make_response, jsonify
 from instance.config import app_config
+from app.error_handlers import *
 from .version1.views import admin
 
 def create_app(test_config=None):
@@ -11,13 +12,19 @@ def create_app(test_config=None):
 
     app.config.from_pyfile('config.py')
 
-    @app.errorhandler(400)
-    @app.errorhandler(403)
-    @app.errorhandler(404)
-    @app.errorhandler(405)
-    @app.errorhandler(409)
-    def http_error_handler(error):
-        return make_response(jsonify({'status': error.code, 'error': error.description}), error.code)
+    @app.errorhandler(ConflictError)
+    @app.errorhandler(ValidationError)
+    @app.errorhandler(ConflictError)
+    @app.errorhandler(PermissionError)
+    @app.errorhandler(MethodError)
+    @app.errorhandler(ServerError)
+    def handle_error(error):
+        return make_response(jsonify(error.to_dict()))
+
+    # This will catch any uncaught http error
+    @app.errorhandler(Exception)
+    def exceptional_error(error):
+        return make_response(jsonify({"status":error.code, "message":error.description}))
 
     # a simple page that says hello
     @app.route('/')
