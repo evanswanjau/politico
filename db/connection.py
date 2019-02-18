@@ -1,6 +1,14 @@
 import psycopg2
 from psycopg2 import Error
 
+connection = psycopg2.connect(user = "postgres",
+                              password = "pass123",
+                              host = "127.0.0.1",
+                              port = "5432",
+                              database = "politico_db")
+
+cursor = connection.cursor()
+
 # method to create politico tables
 def create_tables():
     """ create tables in the PostgreSQL database"""
@@ -61,13 +69,6 @@ def create_tables():
         """)
     connection = None
     try:
-        connection = psycopg2.connect(user = "postgres",
-                                      password = "pass123",
-                                      host = "127.0.0.1",
-                                      port = "5432",
-                                      database = "politico_db")
-
-        cursor = connection.cursor()
         # create table one by one
         for command in commands:
             cursor.execute(command)
