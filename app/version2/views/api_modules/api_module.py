@@ -16,5 +16,11 @@ class UserAPI(MethodView):
                 "status": 200,
                 "data": new_user
                 }), 200)
+        elif action == 'login':
+            data = current_user.loginUser()
+            return make_response(jsonify({
+                "status": 200,
+                "data": data
+                }), 200)
         else:
             pass

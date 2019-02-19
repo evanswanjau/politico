@@ -8,3 +8,6 @@ user_view = UserAPI.as_view('user_api')
 
 # sign up user
 auth_bp.add_url_rule('/signup', defaults={'action': 'signup'}, view_func=user_view, methods=['POST'])
+
+# login user
+auth_bp.add_url_rule('/login', defaults={'action': 'login'}, view_func=user_view, methods=['POST'])
