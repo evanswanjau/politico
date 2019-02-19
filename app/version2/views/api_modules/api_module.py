@@ -38,8 +38,12 @@ class UserAPI(MethodView):
                 "status": 200,
                 "data": data
                 }), 200)
-        else:
-            pass
+        elif action == 'petition':
+            data = current_user.requestPetition()
+            return make_response(jsonify({
+                "status": 200,
+                "data": data
+                }), 200)
 
 
     # get
