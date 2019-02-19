@@ -13,7 +13,7 @@ class UserModule():
 
     # signup user
     def signupUser(self):
-        # validate data using jwt
+        """ signup user """
         validated_object = self.data
         # add to db
         db.insert_data(validated_object)
@@ -21,6 +21,18 @@ class UserModule():
 
 
     # login user
+    def loginUser(self):
+        """ login user """
+        validated_data = self.data
+
+        query = """SELECT * FROM users WHERE email = {}""".format(validated_data["email"])
+        user = db.fetch_single_item(query)
+        if user:
+            # validate password
+        else:
+            raise NotFoundError('user doesn\'t exist')
+        return [{"token": "#token", "user":user}]
+
 
     # express interest
 
