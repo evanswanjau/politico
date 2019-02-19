@@ -83,5 +83,26 @@ class UserModule():
 
 
     # get political party results
+    def partyResults(self, office_id):
+        """ Political Party Results """
+        office_results = []
+
+        candidates_query = """ SELECT candidate FROM vote WHERE office = {}\
+                               GROUP BY candidate """.format(office_id)
+        candidates = db.fetch_multiple_items(candidates_query)
+
+        for candidate in candidates:
+            votes_query = """ SELECT * FROM vote WHERE office = {}\
+                              AND candidate = {} """.format(office_id, candidate[0])
+            votes = len(db.fetch_multiple_items(votes_query))
+
+            office_results.append({"office":office_id, "candidate":candidate[0],
+                                   "result":votes})
+
+        return office_results
+
+
+
+
 
     # petition
