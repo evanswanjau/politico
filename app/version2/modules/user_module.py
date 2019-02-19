@@ -35,6 +35,39 @@ class UserModule():
 
 
     # express interest
+    def expressInterest(self):
+        """ Express Candidate Interest """
+
+        validated_data =  self.data
+
+        # get user id
+        userid_query = """ SELECT id FROM users WHERE email = {}"""
+                       .format(validated_data['email'])
+        user_id = fetch_single_item(userid_query)[0])
+
+        # check whether user is a candidate
+        candidate_query = """ SELECT candidate FROM candidates WHERE candidate = {}"""
+                          .format(user_id)
+        candidate = fetch_single_item(candidate_query)
+
+        if candidate:
+            raise ConflictError('user is already a candidate')
+        else:
+            # get political party id
+            partyid_query = """ SELECT id FROM party WHERE name = {}"""
+                           .format(validated_data['party_name'])
+            party_id = fetch_single_item(userid_query)[0])
+
+            # get gov office id
+            officeid_query = """ SELECT id FROM office WHERE name = {}"""
+                           .format(validated_data['office_name'])
+            office_id = fetch_single_item(officeid_query)[0])
+
+            # insert into db
+            candidates = {"office":office_id, "party":party_id, "candidate":candidate}
+
+            return {"office":office_id, "candidate":candidate}
+
 
     # vote
 
