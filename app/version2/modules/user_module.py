@@ -34,8 +34,8 @@ class UserModule():
         return [{"token": "#token", "user":user}]
 
 
-    # express interest
-    def expressInterest(self):
+    # register candidate
+    def registerCandidate(self, office_id):
         """ Express Candidate Interest """
 
         validated_data =  self.data
@@ -57,11 +57,6 @@ class UserModule():
             partyid_query = """ SELECT id FROM party WHERE name = {}"""
                            .format(validated_data['party_name'])
             party_id = fetch_single_item(userid_query)[0])
-
-            # get gov office id
-            officeid_query = """ SELECT id FROM office WHERE name = {}"""
-                           .format(validated_data['office_name'])
-            office_id = fetch_single_item(officeid_query)[0])
 
             # insert into db
             candidates = {"office":office_id, "party":party_id, "candidate":candidate}
