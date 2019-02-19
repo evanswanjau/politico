@@ -1,4 +1,4 @@
-""" This is the user api implemetation section """
+""" This is the user authorization api implemetation section """
 from flask import Blueprint
 from ..views.api_modules.api_module import *
 
