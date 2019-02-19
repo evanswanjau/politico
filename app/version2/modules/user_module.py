@@ -26,7 +26,7 @@ class UserModule():
         validated_data = self.data
 
         query = """SELECT * FROM users WHERE email = {}""".format(validated_data["email"])
-        user = db.fetch_single_item(query)
+        user = db.fetch_single_item(query)[0]
         if user:
             # validate password
         else:
@@ -43,12 +43,12 @@ class UserModule():
         # get user id
         userid_query = """ SELECT id FROM users WHERE email = {}"""
                        .format(validated_data['email'])
-        user_id = fetch_single_item(userid_query)[0])
+        user_id = db.fetch_single_item(userid_query)[0]
 
         # check whether user is a candidate
         candidate_query = """ SELECT candidate FROM candidates WHERE candidate = {}"""
                           .format(user_id)
-        candidate = fetch_single_item(candidate_query)
+        candidate = db.fetch_single_item(candidate_query)
 
         if candidate:
             raise ConflictError('user is already a candidate')
@@ -56,15 +56,31 @@ class UserModule():
             # get political party id
             partyid_query = """ SELECT id FROM party WHERE name = {}"""
                            .format(validated_data['party_name'])
-            party_id = fetch_single_item(userid_query)[0])
+            party_id = db.fetch_single_item(userid_query)[0]
 
             # insert into db
             candidates = {"office":office_id, "party":party_id, "candidate":candidate}
+            db.insert_data('candidates', candidates)
 
             return {"office":office_id, "candidate":candidate}
 
 
     # vote
+    def userVote(self):
+        """ User Voting Process """
+        validated_data = self.data
+
+        userid_query = """ SELECT * FROM vote WHERE voter = {} AND office = {}"""
+                       .format(validated_data['voter'], validated_data['office'])
+        vote_data = db.fetch_single_item(userid_query)[0]
+
+        # check if user has already voted
+        if vote_data:
+            raise ConflictError('user has already voted')
+        else:
+            db.insert_data('vote', validated_data)
+            return validated_data
+
 
     # get political party results
 
