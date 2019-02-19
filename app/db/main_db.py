@@ -52,6 +52,7 @@ def create_tables():
             office INTEGER NOT NULL,
             party INTEGER NOT NULL,
             candidate INTEGER NOT NULL
+            FOREIGN KEY (candidate) REFERENCES users (id)
         )
         """,
         """
