@@ -9,3 +9,7 @@ user_view = UserAPI.as_view('user_api')
 # register candidate
 user_bp.add_url_rule('/office/<int:office_id>/register', defaults={'action': 'register'},
                      view_func=user_view, methods=['POST'])
+
+# user vote
+user_bp.add_url_rule('/votes/', defaults={'action': 'vote'},
+                     view_func=user_view, methods=['POST'])

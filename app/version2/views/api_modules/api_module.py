@@ -30,5 +30,11 @@ class UserAPI(MethodView):
                 "status": 200,
                 "data": data
                 }), 200)
+        elif action == 'vote':
+            data = current_user.userVote()
+            return make_response(jsonify({
+                "status": 200,
+                "data": data
+                }), 200)
         else:
             pass
