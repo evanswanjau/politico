@@ -33,6 +33,7 @@ def create_tables():
             secondname VARCHAR(50) NOT NULL,
             othername VARCHAR(50),
             email VARCHAR(50) NOT NULL,
+            password VARCHAR(150) NOT NULL,
             phoneNumber VARCHAR (15) NOT NULL,
             passportUrl VARCHAR (50) NOT NULL,
             isAdmin BOOLEAN NOT NULL DEFAULT FALSE
