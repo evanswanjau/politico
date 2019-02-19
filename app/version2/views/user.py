@@ -13,3 +13,7 @@ user_bp.add_url_rule('/office/<int:office_id>/register', defaults={'action': 're
 # user vote
 user_bp.add_url_rule('/votes/', defaults={'action': 'vote'},
                      view_func=user_view, methods=['POST'])
+
+# view all political office results
+admin_bp.add_url_rule('/office/<office_id>/result', defaults={'office_id': None},
+                      view_func=party_view, methods=['GET'])

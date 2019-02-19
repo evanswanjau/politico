@@ -82,9 +82,9 @@ class UserModule():
             return validated_data
 
 
-    # get political party results
-    def partyResults(self, office_id):
-        """ Political Party Results """
+    # get political office results
+    def officeResults(self, office_id):
+        """ Political Office Results """
         office_results = []
 
         candidates_query = """ SELECT candidate FROM vote WHERE office = {}\

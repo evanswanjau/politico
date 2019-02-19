@@ -5,7 +5,9 @@ from ...modules.user_module import UserModule
 class UserAPI(MethodView):
     """ User Class Methods and Attributes """
 
+    # post
     def post(self, action, office_id=None):
+        """ Post User Data """
         data = request.get_json()
         current_user = UserModule(data)
 
@@ -38,3 +40,14 @@ class UserAPI(MethodView):
                 }), 200)
         else:
             pass
+
+
+    # get
+    def get(self, office_id):
+        """ Get user data """
+        if office_id:
+            data = current_user.officeResults(office_id)
+            return make_response(jsonify({
+                "status": 200,
+                "data": data
+                }), 200)
