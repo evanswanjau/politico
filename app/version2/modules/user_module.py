@@ -101,8 +101,10 @@ class UserModule():
 
         return office_results
 
-
-
-
-
     # petition
+    def requestPetition(self):
+        """ Request Partition Method """
+        validated_data = self.data
+
+        db.insert_data('petition', validated_data)
+        return validated_data
