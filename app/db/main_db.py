@@ -61,7 +61,9 @@ def create_tables():
             createdOn timestamp DEFAULT CURRENT_TIMESTAMP,
             createdBy INTEGER NOT NULL,
             office INTEGER NOT NULL,
-            candidate INTEGER NOT NULL
+            candidate INTEGER NOT NULL,
+            voter INTEGER NOT NULL
+            FOREIGN KEY (voter) REFERENCES users (id)
         )
         """,
         """
