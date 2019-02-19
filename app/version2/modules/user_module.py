@@ -1,26 +1,24 @@
 """ The user module that is supposed to take care of all user methods and attributes """
 import psycopg2
+from psycopg2 import Error
+from app.db.database import DBConnection
 
-class User():
+class UserModule():
     """ All user processes class """
 
+    db = DBConnection()
+
+    def __init__(self, data=None):
+        self.data = data
+
     # signup user
-    def signupUser(data):
-        # validate all data
-        fname = data["fname"]
-        sname = data["sname"]
-        oname = data["oname"]
-        email = data["email"]
-        pNumber = data["pNumber"]
-        passportUrl = data["passportUrl"]
-        insert_user = "INSERT INTO users(firstname, secondname, othername, email,
-                                         phoneNumber, passportUrl)\
-                       VALUES (fname, sname, oname, email, pNumber, passportUrl)"
-        cursor.execute(insert_user)
-        cursor.close()
-        connection.commit()
-        connection.close()
-        return data
+    def signupUser(self):
+        # validate data using jwt
+        validated_object = self.data
+        # add to db
+        db.insert_data(validated_object)
+        return [{"token": "#token", "user":validated_object}]
+
 
     # login user
 
