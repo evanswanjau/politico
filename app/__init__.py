@@ -14,13 +14,13 @@ def create_app(test_config=None):
 
     app.config.from_object(os.getenv("APP_SETTING"))
     app.config.from_pyfile('config.py')
-    DB_URL = "politico_db, user=postgres, password=pass123, host=127.0.0.1, port=5432"
+    DB_URL = os.getenv("DATABASE_URL")
 
-    DBConnection(DB_URL)
-    DBConnection.create_tables_and_admin(DBConnection)
-    if name_conf == "testing":
-        DbConnection.drop_all_tables(DBConnection)
+    db = DBConnection(DB_URL)
 
+    # drop existing tables, create new ones and add admin
+    db.drop_tables()
+    db.create_tables_and_admin()
 
     # error handlers
     @app.errorhandler(ConflictError)

@@ -1,12 +1,10 @@
 """ The user module that is supposed to take care of all user methods and attributes """
 import psycopg2
 from psycopg2 import Error
-from app.db.database import DBConnection
+from app.db.database import DBConnection as db
 
-class UserModule():
+class UserModule(db):
     """ All user processes class """
-
-    db = DBConnection()
 
     def __init__(self, data=None):
         self.data = data
@@ -28,7 +26,7 @@ class UserModule():
         query = """SELECT * FROM users WHERE email = {}""".format(validated_data["email"])
         user = db.fetch_single_item(query)[0]
         if user:
-            # validate password
+            pass
         else:
             raise NotFoundError('user doesn\'t exist')
         return [{"token": "#token", "user":user}]
@@ -41,21 +39,21 @@ class UserModule():
         validated_data =  self.data
 
         # get user id
-        userid_query = """ SELECT id FROM users WHERE email = {}"""
-                       .format(validated_data['email'])
+        userid_query = """ SELECT id FROM users
+                       WHERE email = {}""".format(validated_data['email'])
         user_id = db.fetch_single_item(userid_query)[0]
 
         # check whether user is a candidate
-        candidate_query = """ SELECT candidate FROM candidates WHERE candidate = {}"""
-                          .format(user_id)
+        candidate_query = """ SELECT candidate FROM candidates
+                          WHERE candidate = {}""".format(user_id)
         candidate = db.fetch_single_item(candidate_query)
 
         if candidate:
             raise ConflictError('user is already a candidate')
         else:
             # get political party id
-            partyid_query = """ SELECT id FROM party WHERE name = {}"""
-                           .format(validated_data['party_name'])
+            partyid_query = """ SELECT id FROM party
+                            WHERE name = {}""".format(validated_data['party_name'])
             party_id = db.fetch_single_item(userid_query)[0]
 
             # insert into db
@@ -70,8 +68,8 @@ class UserModule():
         """ User Voting Process """
         validated_data = self.data
 
-        userid_query = """ SELECT * FROM vote WHERE voter = {} AND office = {}"""
-                       .format(validated_data['voter'], validated_data['office'])
+        userid_query = """ SELECT * FROM vote WHERE voter = {}
+                       AND office = {}""".format(validated_data['voter'], validated_data['office'])
         vote_data = db.fetch_single_item(userid_query)[0]
 
         # check if user has already voted
@@ -88,12 +86,12 @@ class UserModule():
         office_results = []
 
         candidates_query = """ SELECT candidate FROM vote WHERE office = {}\
-                               GROUP BY candidate """.format(office_id)
+                           GROUP BY candidate """.format(office_id)
         candidates = db.fetch_multiple_items(candidates_query)
 
         for candidate in candidates:
             votes_query = """ SELECT * FROM vote WHERE office = {}\
-                              AND candidate = {} """.format(office_id, candidate[0])
+                          AND candidate = {} """.format(office_id, candidate[0])
             votes = len(db.fetch_multiple_items(votes_query))
 
             office_results.append({"office":office_id, "candidate":candidate[0],

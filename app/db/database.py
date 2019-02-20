@@ -1,8 +1,8 @@
 """" Connection to the postgres database """
 import psycopg2
-from .main_db import drop_existing_tables, create_tables, create_admin
+from .main_db import drop_existing_tables, create_tables
 
-class DBConnection:
+class DBConnection():
     """ Connection for our entire application """
 
     # initialize connection
@@ -24,7 +24,12 @@ class DBConnection:
             self.cursor.execute(table)
             self.connection.commit()
 
-        create_admin(self.connection)
+        # create admin
+        admin = {"firstname":"admin", "secondname":"admin", "othername":"admin",
+                 "email":"admin@gmail.com", "password":"password",
+                 "phoneNumber":"0700000000", "passportUrl":"admin.img", "isAdmin":True}
+
+        self.insert_data('users', admin)
 
 
     # drop all tables
@@ -56,10 +61,11 @@ class DBConnection:
     # insert data
     def insert_data(self, table, data):
         """ insert data """
-        keys = tuple(', '.join([key for key in data]))
-        data_values = tuple([data[key] for key in data])
+        keys = ', '.join([key for key in data])
+        data_values = str(tuple([data[key] for key in data]))
 
-        self.cursor.execute(""" INSERT INTO table keys VALUES data_values """)
+        self.cursor.execute(""" INSERT INTO users ({}) VALUES
+                           {} """.format(keys, data_values))
         self.connection.commit()
 
 

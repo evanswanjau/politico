@@ -4,12 +4,12 @@
 def drop_existing_tables():
     """ Drops all tables """
     tables_to_drop = [
-        """ DROP TABLE IF EXISTS party """,
-        """ DROP TABLE IF EXISTS users """,
-        """ DROP TABLE IF EXISTS office """,
-        """ DROP TABLE IF EXISTS candidates """,
-        """ DROP TABLE IF EXISTS vote """,
-        """ DROP TABLE IF EXISTS petition """
+        """ DROP TABLE IF EXISTS party CASCADE""",
+        """ DROP TABLE IF EXISTS users CASCADE""",
+        """ DROP TABLE IF EXISTS office CASCADE""",
+        """ DROP TABLE IF EXISTS candidates CASCADE""",
+        """ DROP TABLE IF EXISTS vote CASCADE""",
+        """ DROP TABLE IF EXISTS petition CASCADE"""
     ]
 
     return tables_to_drop
@@ -51,8 +51,8 @@ def create_tables():
             id SERIAL PRIMARY KEY,
             office INTEGER NOT NULL,
             party INTEGER NOT NULL,
-            candidate INTEGER NOT NULL
-            FOREIGN KEY (candidate) REFERENCES users (id)
+            candidate INTEGER NOT NULL,
+            FOREIGN KEY (candidate) REFERENCES users(id) ON DELETE CASCADE
         )
         """,
         """
@@ -62,8 +62,8 @@ def create_tables():
             createdBy INTEGER NOT NULL,
             office INTEGER NOT NULL,
             candidate INTEGER NOT NULL,
-            voter INTEGER NOT NULL
-            FOREIGN KEY (voter) REFERENCES users (id)
+            voter INTEGER NOT NULL,
+            FOREIGN KEY (voter) REFERENCES users (id) ON DELETE RESTRICT
         )
         """,
         """
@@ -78,11 +78,3 @@ def create_tables():
         """]
 
     return tables_to_create
-
-
-# method to create user admin
-def create_admin():
-    """ create admin user """
-    # admin object
-    # check whether admin exists
-    # insert admin if not exists
