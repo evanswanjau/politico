@@ -36,11 +36,13 @@ def create_app(test_config=None):
     @app.errorhandler(PermissionError)
     @app.errorhandler(MethodError)
     @app.errorhandler(ServerError)
+    @app.errorhandler(NotFoundError)
+    @app.errorhandler(ForbiddenError)
     def handle_error(error):
         return make_response(jsonify(error.to_dict()))
 
     # This will catch any uncaught http error
-    
+
 
     # the app home page
     @app.route('/')

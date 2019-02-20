@@ -6,6 +6,7 @@ from ...error_handlers import *
 DB_URL = os.getenv("DATABASE_URL")
 db = DBConnection(DB_URL)
 from flask_jwt_extended import (create_access_token)
+from werkzeug.security import check_password_hash, generate_password_hash
 
 class UserModule(dv):
     """ All user processes class """
@@ -16,7 +17,6 @@ class UserModule(dv):
     # signup user
     def signupUser(self):
         """ signup user """
-        value = 'None'
         expected_fields = ['firstname', 'secondname', 'othername', 'email',
                            'password', 'phoneNumber', 'passportUrl']
 
@@ -33,11 +33,17 @@ class UserModule(dv):
         dv.validate_length('password', self.data['password'], 5, 50)
 
         # validate existence
-        dv.validateExistence('users', 'email', self.data['email'])
+        if dv.validateExistence('users', 'email', self.data['email']):
+            raise ConflictError('email ' + self.data['email'] + ' already exists')
+
+        if dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber']):
+            raise ConflictError('phoneNumber ' + self.data['phoneNumber'] + ' already exists')
+
         dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber'])
 
         # insert to db
         data = self.data
+        self.data["password"] = generate_password_hash(self.data["password"])
         db.insert_data('users', self.data)
         token = create_access_token(identity=self.data['email'])
         return [{"token": token, "user":self.data}]
@@ -46,15 +52,26 @@ class UserModule(dv):
     # login user
     def loginUser(self):
         """ login user """
-        validated_data = self.data
+        expected_fields = ['email', 'password']
 
-        query = """SELECT * FROM users WHERE email = {}""".format(validated_data["email"])
-        user = db.fetch_single_item(query)[0]
-        if user:
-            pass
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(self.data[key], str)
+
+        # validate existence
+        user_object = dv.validateExistence('users', 'email', self.data['email'])
+        if user_object:
+            if not check_password_hash(user_object["password"], self.data['password']):
+                raise ForbiddenError('Incorrect password')
         else:
-            raise NotFoundError('user doesn\'t exist')
-        return [{"token": "#token", "user":user}]
+            raise NotFoundError('That acccount does not exist')
+
+        token = create_access_token(identity=self.data['email'])
+        return [{"token": token, "user":user_object}]
 
 
     # register candidate

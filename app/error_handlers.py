@@ -47,6 +47,13 @@ class PermissionError(BaseError):
         self.message = message
         self.c_message = c_message
 
+class ForbiddenError(BaseError):
+    def __init__(self, c_message, message='Access Denied'):
+        BaseError.__init__(self)
+        self.code = 403
+        self.message = message
+        self.c_message = c_message
+
 class MethodError(BaseError):
     def __init__(self, c_message, message='Method not allowed'):
         BaseError.__init__(self)

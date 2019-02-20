@@ -26,7 +26,7 @@ class DBConnection():
 
         # create admin
         admin = {"firstname":"admin", "secondname":"admin", "othername":"admin",
-                 "email":"admin@gmail.com", "password":"password",
+                 "email":"admin@gmail.com", "password":"pbkdf2:sha256:50000$EVkFyv0t$352a72a9b0c37b197044db033234a96fb138264f448b8ef0de010cfd568ec3e2",
                  "phoneNumber":"0700000000", "passportUrl":"admin.img", "isAdmin":True}
 
         self.insert_data('users', admin)
