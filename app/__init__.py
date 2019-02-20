@@ -1,6 +1,10 @@
 """ This is the Application Initialization Method """
 import os
 from flask import Flask, make_response, jsonify
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 from instance.config import app_config
 from app.error_handlers import *
 from .version1.views import admin
@@ -13,6 +17,9 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_object(os.getenv("APP_SETTING"))
+    app.config['JWT_SECRET_KEY'] = 'ThisismylilSecret'
+    jwt = JWTManager(app)
+
     app.config.from_pyfile('config.py')
     DB_URL = os.getenv("DATABASE_URL")
 
@@ -33,10 +40,7 @@ def create_app(test_config=None):
         return make_response(jsonify(error.to_dict()))
 
     # This will catch any uncaught http error
-    @app.errorhandler(Exception)
-    def exceptional_error(error):
-        return error, 'error here'
-
+    
 
     # the app home page
     @app.route('/')

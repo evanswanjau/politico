@@ -1,9 +1,13 @@
 """ The user module that is supposed to take care of all user methods and attributes """
-import psycopg2
-from psycopg2 import Error
-from app.db.database import DBConnection as db
+import psycopg2, re, os
+from app.db.database import DBConnection
+from app.version2.modules.validation_module import DataValidation as dv
+from ...error_handlers import *
+DB_URL = os.getenv("DATABASE_URL")
+db = DBConnection(DB_URL)
+from flask_jwt_extended import (create_access_token)
 
-class UserModule(db):
+class UserModule(dv):
     """ All user processes class """
 
     def __init__(self, data=None):
@@ -12,10 +16,31 @@ class UserModule(db):
     # signup user
     def signupUser(self):
         """ signup user """
-        validated_object = self.data
-        # add to db
-        db.insert_data(validated_object)
-        return [{"token": "#token", "user":validated_object}]
+        value = 'None'
+        expected_fields = ['firstname', 'secondname', 'othername', 'email',
+                           'password', 'phoneNumber', 'passportUrl']
+
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(self.data[key], str)
+
+        # validate length
+        dv.validate_length('phoneNumber', self.data['phoneNumber'], 10, 15)
+        dv.validate_length('password', self.data['password'], 5, 50)
+
+        # validate existence
+        dv.validateExistence('users', 'email', self.data['email'])
+        dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber'])
+
+        # insert to db
+        data = self.data
+        db.insert_data('users', self.data)
+        token = create_access_token(identity=self.data['email'])
+        return [{"token": token, "user":self.data}]
 
 
     # login user

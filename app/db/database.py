@@ -65,9 +65,9 @@ class DBConnection():
         data_values = str(tuple([data[key] for key in data]))
 
         self.cursor.execute(""" INSERT INTO users ({}) VALUES
-                           {} """.format(keys, data_values))
-        self.connection.commit()
-
+                           {} RETURNING id""".format(keys, data_values))
+        value = self.connection.commit()
+        return value
 
     # update data
     def update_data(self, table, key, value, field, id):
