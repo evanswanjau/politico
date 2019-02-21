@@ -112,18 +112,36 @@ class UserModule(dv):
     # vote
     def userVote(self):
         """ User Voting Process """
-        validated_data = self.data
 
-        userid_query = """ SELECT * FROM vote WHERE voter = {}
-                       AND office = {}""".format(validated_data['voter'], validated_data['office'])
-        vote_data = db.fetch_single_item(userid_query)[0]
+        expected_fields = ['createdBy', 'office', 'candidate']
 
-        # check if user has already voted
-        if vote_data:
-            raise ConflictError('user has already voted')
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(self.data[key], int)
+
+
+        user_id = dv.validateExistence('users', 'id', self.data['candidate'])
+
+        if not user_id:
+            raise BaseError(400, c_message="Candidate is not a registered user")
         else:
-            db.insert_data('vote', validated_data)
-            return validated_data
+            user_vote_query = """ SELECT * FROM vote WHERE office = {}
+                              AND createdBy = {} """.format(self.data['office'], self.data['createdBy'])
+
+            user = db.fetch_single_item(user_vote_query)
+            if user:
+                raise ConflictError('user has already voted')
+            else:
+                validated_data = {"office":self.data['office'], "candidate":self.data['candidate'],
+                        "createdBy": self.data['createdBy']}
+                db.insert_data('vote', validated_data)
+
+        return {"office":self.data['office'], "candidate":self.data['candidate'],
+                "voter": self.data['createdBy']}
 
 
     # get political office results

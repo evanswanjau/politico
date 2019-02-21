@@ -62,8 +62,7 @@ def create_tables():
             createdBy INTEGER NOT NULL,
             office INTEGER NOT NULL,
             candidate INTEGER NOT NULL,
-            voter INTEGER NOT NULL,
-            FOREIGN KEY (voter) REFERENCES users (id) ON DELETE RESTRICT
+            FOREIGN KEY (createdBy) REFERENCES users (id) ON DELETE RESTRICT
         )
         """,
         """
