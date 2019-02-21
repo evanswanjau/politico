@@ -54,7 +54,7 @@ class DBConnection():
     def fetch_multiple_items(self, query):
         """ fetches multiple items """
         self.cursor.execute(query)
-        items = cur.fetchall()
+        items = self.cursor.fetchall()
         return items
 
 

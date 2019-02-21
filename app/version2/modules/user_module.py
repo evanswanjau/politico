@@ -149,15 +149,14 @@ class UserModule(dv):
         """ Political Office Results """
         office_results = []
 
-        candidates_query = """ SELECT candidate FROM vote WHERE office = {}\
+        candidates_query = """ SELECT candidate FROM vote WHERE office = {}
                            GROUP BY candidate """.format(office_id)
         candidates = db.fetch_multiple_items(candidates_query)
 
         for candidate in candidates:
-            votes_query = """ SELECT * FROM vote WHERE office = {}\
+            votes_query = """ SELECT * FROM vote WHERE office = {}
                           AND candidate = {} """.format(office_id, candidate[0])
             votes = len(db.fetch_multiple_items(votes_query))
-
             office_results.append({"office":office_id, "candidate":candidate[0],
                                    "result":votes})
 

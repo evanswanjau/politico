@@ -15,8 +15,7 @@ user_bp.add_url_rule('/votes/', defaults={'action': 'vote'},
                      view_func=user_view, methods=['POST'])
 
 # view all political office results
-user_bp.add_url_rule('/office/<office_id>/result', defaults={'office_id': None},
-                      view_func=user_view, methods=['GET'])
+user_bp.add_url_rule('/office/<office_id>/result', view_func=user_view, methods=['GET'])
 
 # request petition
 user_bp.add_url_rule('/petitions/', defaults={'action': 'petition'},
