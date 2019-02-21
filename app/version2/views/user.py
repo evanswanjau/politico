@@ -2,7 +2,7 @@
 from flask import Blueprint
 from ..views.api_modules.api_module import *
 
-user_bp = Blueprint('auth', __name__, url_prefix='/api/v2/')
+user_bp = Blueprint('user', __name__, url_prefix='/api/v2/')
 
 user_view = UserAPI.as_view('user_api')
 
@@ -15,9 +15,9 @@ user_bp.add_url_rule('/votes/', defaults={'action': 'vote'},
                      view_func=user_view, methods=['POST'])
 
 # view all political office results
-admin_bp.add_url_rule('/office/<office_id>/result', defaults={'office_id': None},
-                      view_func=party_view, methods=['GET'])
+user_bp.add_url_rule('/office/<office_id>/result', defaults={'office_id': None},
+                      view_func=user_view, methods=['GET'])
 
 # request petition
-admin_bp.add_url_rule('/petitions/', defaults={'action': 'petition'},
-                      view_func=party_view, methods=['POST'])
+user_bp.add_url_rule('/petitions/', defaults={'action': 'petition'},
+                      view_func=user_view, methods=['POST'])

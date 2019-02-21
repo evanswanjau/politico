@@ -63,7 +63,12 @@ class UserModule(dv):
             dv.validateType(self.data[key], str)
 
         # validate existence
-        user_object = dv.validateExistence('users', 'email', self.data['email'])
+        item = dv.validateExistence('users', 'email', self.data['email'])
+
+        user_object = {"id":item[0], "firstname":item[1], "secondname":item[2],
+        "othername":item[3], "email":item[4], "password":item[5], "hqAddress":item[6],
+        "passportUrl":item[7], "isAdmin":item[8]}
+
         if user_object:
             if not check_password_hash(user_object["password"], self.data['password']):
                 raise ForbiddenError('Incorrect password')
@@ -78,31 +83,30 @@ class UserModule(dv):
     def registerCandidate(self, office_id):
         """ Express Candidate Interest """
 
-        validated_data =  self.data
+        expected_fields = ['party', 'candidate']
 
-        # get user id
-        userid_query = """ SELECT id FROM users
-                       WHERE email = {}""".format(validated_data['email'])
-        user_id = db.fetch_single_item(userid_query)[0]
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
 
-        # check whether user is a candidate
-        candidate_query = """ SELECT candidate FROM candidates
-                          WHERE candidate = {}""".format(user_id)
-        candidate = db.fetch_single_item(candidate_query)
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(self.data[key], int)
 
-        if candidate:
-            raise ConflictError('user is already a candidate')
+        user_id = dv.validateExistence('users', 'id', self.data['candidate'])
+
+        if not user_id:
+            raise BaseError(400, c_message="Candidate is not a registered user")
         else:
-            # get political party id
-            partyid_query = """ SELECT id FROM party
-                            WHERE name = {}""".format(validated_data['party_name'])
-            party_id = db.fetch_single_item(userid_query)[0]
+            # validate existence
+            candidate_object = dv.validateExistence('candidates', 'candidate', self.data['candidate'])
+            if not candidate_object:
+                self.data['office'] = office_id
+                db.insert_data('candidates', self.data)
+            else:
+                raise ConflictError('user is already a candidate')
 
-            # insert into db
-            candidates = {"office":office_id, "party":party_id, "candidate":candidate}
-            db.insert_data('candidates', candidates)
-
-            return {"office":office_id, "candidate":candidate}
+        return {"office":self.data["office"], "user":self.data["candidate"]}
 
 
     # vote

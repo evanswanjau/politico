@@ -64,8 +64,8 @@ class DBConnection():
         keys = ', '.join([key for key in data])
         data_values = str(tuple([data[key] for key in data]))
 
-        self.cursor.execute(""" INSERT INTO users ({}) VALUES
-                           {} RETURNING id""".format(keys, data_values))
+        self.cursor.execute(""" INSERT INTO {} ({}) VALUES
+                           {} RETURNING id""".format(table, keys, data_values))
         value = self.connection.commit()
         return value
 

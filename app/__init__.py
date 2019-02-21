@@ -9,6 +9,7 @@ from instance.config import app_config
 from app.error_handlers import *
 from .version1.views import admin
 from .version2.views import auth
+from .version2.views import user
 from .db.database import DBConnection
 
 def create_app(test_config=None):
@@ -38,6 +39,7 @@ def create_app(test_config=None):
     @app.errorhandler(ServerError)
     @app.errorhandler(NotFoundError)
     @app.errorhandler(ForbiddenError)
+    @app.errorhandler(BaseError)
     def handle_error(error):
         return make_response(jsonify(error.to_dict()))
 
@@ -54,5 +56,7 @@ def create_app(test_config=None):
     app.register_blueprint(admin.admin_bp)
     # auth blueprint
     app.register_blueprint(auth.auth_bp)
+    # user blueprint
+    app.register_blueprint(user.user_bp)
 
     return app

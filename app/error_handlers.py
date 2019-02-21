@@ -15,7 +15,7 @@ class BaseError(Exception):
             message = self.c_message
         else:
             message = self.message
-        return {'status': self.code, 'message': message}
+        return {'status':self.code, 'message': self.c_message}
 
 
 class NotFoundError(BaseError):

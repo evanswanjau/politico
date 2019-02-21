@@ -18,7 +18,7 @@ class DataValidation():
 
     # validate empty
     def validateEmpty(key, value):
-        if not value or value.strip() == "":
+        if not value or str(value).strip() == "":
             raise ValidationError(key + ' cannot be empty')
         else:
             return False
@@ -28,10 +28,7 @@ class DataValidation():
         item_query = """ SELECT * FROM {} WHERE {} = '{}'""".format(table, key, value)
         item = db.fetch_single_item(item_query)
         if item:
-            user_object = {"id":item[0], "firstname":item[1], "secondname":item[2], "othername":item[3],
-            "email":item[4], "password":item[5], "hqAddress":item[6], "passportUrl":item[7],
-            "isAdmin":item[8]}
-            return user_object
+            return item
         else:
             return False
 
