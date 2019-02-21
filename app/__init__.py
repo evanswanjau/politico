@@ -5,6 +5,7 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+from werkzeug.exceptions import HTTPException
 from instance.config import app_config
 from app.error_handlers import *
 from .version1.views import admin
@@ -44,7 +45,10 @@ def create_app(test_config=None):
         return make_response(jsonify(error.to_dict()))
 
     # This will catch any uncaught http error
-
+    @app.errorhandler(Exception)
+    def exceptional_error(error):
+        if isinstance(error, HTTPException):
+            return jsonify(status=error.code, message=error.description)
 
     # the app home page
     @app.route('/')

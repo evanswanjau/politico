@@ -26,7 +26,7 @@ class UserModule(dv):
         # validate not empty and type
         for key in self.data:
             dv.validateEmpty(key, self.data[key])
-            dv.validateType(self.data[key], str)
+            dv.validateType(key, self.data[key], str)
 
         # validate length
         dv.validate_length('phoneNumber', self.data['phoneNumber'], 10, 15)
@@ -60,7 +60,7 @@ class UserModule(dv):
         # validate not empty and type
         for key in self.data:
             dv.validateEmpty(key, self.data[key])
-            dv.validateType(self.data[key], str)
+            dv.validateType(key, self.data[key], str)
 
         # validate existence
         item = dv.validateExistence('users', 'email', self.data['email'])
@@ -91,7 +91,7 @@ class UserModule(dv):
         # validate not empty and type
         for key in self.data:
             dv.validateEmpty(key, self.data[key])
-            dv.validateType(self.data[key], int)
+            dv.validateType(key, self.data[key], int)
 
         user_id = dv.validateExistence('users', 'id', self.data['candidate'])
 
@@ -121,7 +121,7 @@ class UserModule(dv):
         # validate not empty and type
         for key in self.data:
             dv.validateEmpty(key, self.data[key])
-            dv.validateType(self.data[key], int)
+            dv.validateType(key, self.data[key], int)
 
 
         user_id = dv.validateExistence('users', 'id', self.data['candidate'])
@@ -165,7 +165,41 @@ class UserModule(dv):
     # petition
     def requestPetition(self):
         """ Request Partition Method """
-        validated_data = self.data
 
-        db.insert_data('petition', validated_data)
-        return validated_data
+        expected_fields = ['createdBy', 'office', 'body', 'evidence']
+
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            if key != "evidence":
+                dv.validateEmpty(key, self.data[key])
+
+            if key == "body" or key == "evidence":
+                dv.validateType(key, self.data[key], str)
+            else:
+                dv.validateType(key, self.data[key], int)
+
+
+        office = dv.validateExistence('vote', 'office', self.data['office'])
+
+        if not office:
+            raise BaseError(400, c_message="Can\'t petion for an office not voted for")
+        else:
+            user_query = """ SELECT * FROM petition WHERE office = {} AND
+                         createdBy = {}""".format(self.data['office'], self.data['createdBy'])
+            user_value = db.fetch_multiple_items(user_query)
+
+            if user_value:
+                raise ConflictError('You have already raised a petition for that office')
+            else:
+                db.insert_data('petition', self.data)
+
+            evidence = self.data['evidence'].split(",")
+
+
+        data = {"office":self.data['office'], "createdBy":self.data['createdBy'],
+                "text":self.data['body'], "evidence":evidence}
+
+        return data

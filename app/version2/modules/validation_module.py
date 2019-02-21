@@ -33,9 +33,9 @@ class DataValidation():
             return False
 
     # validate type
-    def validateType(value, type):
+    def validateType(key, value, type):
         if not isinstance(value, type):
-            raise ValidationError('incorrect value type, must be ' + str(type.__name__))
+            raise ValidationError('incorrect value type for '+ key + ', must be ' + str(type.__name__))
         else:
             return False
 

@@ -71,8 +71,9 @@ def create_tables():
             createdOn timestamp DEFAULT CURRENT_TIMESTAMP,
             createdBy INTEGER NOT NULL,
             office INTEGER NOT NULL,
-            body TEXT,
+            body TEXT(100),
             evidence VARCHAR(100)
+            FOREIGN KEY (office) REFERENCES vote (office) ON DELETE RESTRICT
         )
         """]
 
