@@ -26,7 +26,7 @@ class DBConnection():
 
         # create admin
         admin = {"firstname":"admin", "secondname":"admin", "othername":"admin",
-                 "email":"admin@gmail.com", "password":"password",
+                 "email":"admin@gmail.com", "password":"pbkdf2:sha256:50000$EVkFyv0t$352a72a9b0c37b197044db033234a96fb138264f448b8ef0de010cfd568ec3e2",
                  "phoneNumber":"0700000000", "passportUrl":"admin.img", "isAdmin":True}
 
         self.insert_data('users', admin)
@@ -54,7 +54,7 @@ class DBConnection():
     def fetch_multiple_items(self, query):
         """ fetches multiple items """
         self.cursor.execute(query)
-        items = cur.fetchall()
+        items = self.cursor.fetchall()
         return items
 
 
@@ -64,10 +64,10 @@ class DBConnection():
         keys = ', '.join([key for key in data])
         data_values = str(tuple([data[key] for key in data]))
 
-        self.cursor.execute(""" INSERT INTO users ({}) VALUES
-                           {} """.format(keys, data_values))
-        self.connection.commit()
-
+        self.cursor.execute(""" INSERT INTO {} ({}) VALUES
+                           {} RETURNING id""".format(table, keys, data_values))
+        value = self.connection.commit()
+        return value
 
     # update data
     def update_data(self, table, key, value, field, id):

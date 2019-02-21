@@ -62,8 +62,7 @@ def create_tables():
             createdBy INTEGER NOT NULL,
             office INTEGER NOT NULL,
             candidate INTEGER NOT NULL,
-            voter INTEGER NOT NULL,
-            FOREIGN KEY (voter) REFERENCES users (id) ON DELETE RESTRICT
+            FOREIGN KEY (createdBy) REFERENCES users (id) ON DELETE RESTRICT
         )
         """,
         """
@@ -72,8 +71,9 @@ def create_tables():
             createdOn timestamp DEFAULT CURRENT_TIMESTAMP,
             createdBy INTEGER NOT NULL,
             office INTEGER NOT NULL,
-            body TEXT,
+            body TEXT(100),
             evidence VARCHAR(100)
+            FOREIGN KEY (office) REFERENCES vote (office) ON DELETE RESTRICT
         )
         """]
 

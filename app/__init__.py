@@ -1,10 +1,16 @@
 """ This is the Application Initialization Method """
 import os
 from flask import Flask, make_response, jsonify
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+from werkzeug.exceptions import HTTPException
 from instance.config import app_config
 from app.error_handlers import *
 from .version1.views import admin
 from .version2.views import auth
+from .version2.views import user
 from .db.database import DBConnection
 
 def create_app(test_config=None):
@@ -13,6 +19,9 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_object(os.getenv("APP_SETTING"))
+    app.config['JWT_SECRET_KEY'] = 'ThisismylilSecret'
+    jwt = JWTManager(app)
+
     app.config.from_pyfile('config.py')
     DB_URL = os.getenv("DATABASE_URL")
 
@@ -29,14 +38,17 @@ def create_app(test_config=None):
     @app.errorhandler(PermissionError)
     @app.errorhandler(MethodError)
     @app.errorhandler(ServerError)
+    @app.errorhandler(NotFoundError)
+    @app.errorhandler(ForbiddenError)
+    @app.errorhandler(BaseError)
     def handle_error(error):
         return make_response(jsonify(error.to_dict()))
 
     # This will catch any uncaught http error
     @app.errorhandler(Exception)
     def exceptional_error(error):
-        return error, 'error here'
-
+        if isinstance(error, HTTPException):
+            return jsonify(status=error.code, message=error.description)
 
     # the app home page
     @app.route('/')
@@ -48,5 +60,7 @@ def create_app(test_config=None):
     app.register_blueprint(admin.admin_bp)
     # auth blueprint
     app.register_blueprint(auth.auth_bp)
+    # user blueprint
+    app.register_blueprint(user.user_bp)
 
     return app

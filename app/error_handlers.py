@@ -15,7 +15,7 @@ class BaseError(Exception):
             message = self.c_message
         else:
             message = self.message
-        return {'status': self.code, 'message': message}
+        return {'status':self.code, 'message': self.c_message}
 
 
 class NotFoundError(BaseError):
@@ -42,6 +42,13 @@ class ConflictError(BaseError):
 
 class PermissionError(BaseError):
     def __init__(self, c_message, message='Permission denied'):
+        BaseError.__init__(self)
+        self.code = 403
+        self.message = message
+        self.c_message = c_message
+
+class ForbiddenError(BaseError):
+    def __init__(self, c_message, message='Access Denied'):
         BaseError.__init__(self)
         self.code = 403
         self.message = message

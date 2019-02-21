@@ -1,9 +1,14 @@
 """ The user module that is supposed to take care of all user methods and attributes """
-import psycopg2
-from psycopg2 import Error
-from app.db.database import DBConnection as db
+import psycopg2, re, os
+from app.db.database import DBConnection
+from app.version2.modules.validation_module import DataValidation as dv
+from ...error_handlers import *
+DB_URL = os.getenv("DATABASE_URL")
+db = DBConnection(DB_URL)
+from flask_jwt_extended import (create_access_token)
+from werkzeug.security import check_password_hash, generate_password_hash
 
-class UserModule(db):
+class UserModule(dv):
     """ All user processes class """
 
     def __init__(self, data=None):
@@ -12,72 +17,131 @@ class UserModule(db):
     # signup user
     def signupUser(self):
         """ signup user """
-        validated_object = self.data
-        # add to db
-        db.insert_data(validated_object)
-        return [{"token": "#token", "user":validated_object}]
+        expected_fields = ['firstname', 'secondname', 'othername', 'email',
+                           'password', 'phoneNumber', 'passportUrl']
+
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(key, self.data[key], str)
+
+        # validate length
+        dv.validate_length('phoneNumber', self.data['phoneNumber'], 10, 15)
+        dv.validate_length('password', self.data['password'], 5, 50)
+
+        # validate existence
+        if dv.validateExistence('users', 'email', self.data['email']):
+            raise ConflictError('email ' + self.data['email'] + ' already exists')
+
+        if dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber']):
+            raise ConflictError('phoneNumber ' + self.data['phoneNumber'] + ' already exists')
+
+        dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber'])
+
+        # insert to db
+        data = self.data
+        self.data["password"] = generate_password_hash(self.data["password"])
+        db.insert_data('users', self.data)
+        token = create_access_token(identity=self.data['email'])
+        return [{"token": token, "user":self.data}]
 
 
     # login user
     def loginUser(self):
         """ login user """
-        validated_data = self.data
+        expected_fields = ['email', 'password']
 
-        query = """SELECT * FROM users WHERE email = {}""".format(validated_data["email"])
-        user = db.fetch_single_item(query)[0]
-        if user:
-            pass
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(key, self.data[key], str)
+
+        # validate existence
+        item = dv.validateExistence('users', 'email', self.data['email'])
+
+        user_object = {"id":item[0], "firstname":item[1], "secondname":item[2],
+        "othername":item[3], "email":item[4], "password":item[5], "hqAddress":item[6],
+        "passportUrl":item[7], "isAdmin":item[8]}
+
+        if user_object:
+            if not check_password_hash(user_object["password"], self.data['password']):
+                raise ForbiddenError('Incorrect password')
         else:
-            raise NotFoundError('user doesn\'t exist')
-        return [{"token": "#token", "user":user}]
+            raise NotFoundError('That acccount does not exist')
+
+        token = create_access_token(identity=self.data['email'])
+        return [{"token": token, "user":user_object}]
 
 
     # register candidate
     def registerCandidate(self, office_id):
         """ Express Candidate Interest """
 
-        validated_data =  self.data
+        expected_fields = ['party', 'candidate']
 
-        # get user id
-        userid_query = """ SELECT id FROM users
-                       WHERE email = {}""".format(validated_data['email'])
-        user_id = db.fetch_single_item(userid_query)[0]
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
 
-        # check whether user is a candidate
-        candidate_query = """ SELECT candidate FROM candidates
-                          WHERE candidate = {}""".format(user_id)
-        candidate = db.fetch_single_item(candidate_query)
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(key, self.data[key], int)
 
-        if candidate:
-            raise ConflictError('user is already a candidate')
+        user_id = dv.validateExistence('users', 'id', self.data['candidate'])
+
+        if not user_id:
+            raise BaseError(400, c_message="Candidate is not a registered user")
         else:
-            # get political party id
-            partyid_query = """ SELECT id FROM party
-                            WHERE name = {}""".format(validated_data['party_name'])
-            party_id = db.fetch_single_item(userid_query)[0]
+            # validate existence
+            candidate_object = dv.validateExistence('candidates', 'candidate', self.data['candidate'])
+            if not candidate_object:
+                self.data['office'] = office_id
+                db.insert_data('candidates', self.data)
+            else:
+                raise ConflictError('user is already a candidate')
 
-            # insert into db
-            candidates = {"office":office_id, "party":party_id, "candidate":candidate}
-            db.insert_data('candidates', candidates)
-
-            return {"office":office_id, "candidate":candidate}
+        return {"office":self.data["office"], "user":self.data["candidate"]}
 
 
     # vote
     def userVote(self):
         """ User Voting Process """
-        validated_data = self.data
 
-        userid_query = """ SELECT * FROM vote WHERE voter = {}
-                       AND office = {}""".format(validated_data['voter'], validated_data['office'])
-        vote_data = db.fetch_single_item(userid_query)[0]
+        expected_fields = ['createdBy', 'office', 'candidate']
 
-        # check if user has already voted
-        if vote_data:
-            raise ConflictError('user has already voted')
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            dv.validateEmpty(key, self.data[key])
+            dv.validateType(key, self.data[key], int)
+
+
+        user_id = dv.validateExistence('users', 'id', self.data['candidate'])
+
+        if not user_id:
+            raise BaseError(400, c_message="Candidate is not a registered user")
         else:
-            db.insert_data('vote', validated_data)
-            return validated_data
+            user_vote_query = """ SELECT * FROM vote WHERE office = {}
+                              AND createdBy = {} """.format(self.data['office'], self.data['createdBy'])
+
+            user = db.fetch_single_item(user_vote_query)
+            if user:
+                raise ConflictError('user has already voted')
+            else:
+                validated_data = {"office":self.data['office'], "candidate":self.data['candidate'],
+                        "createdBy": self.data['createdBy']}
+                db.insert_data('vote', validated_data)
+
+        return {"office":self.data['office'], "candidate":self.data['candidate'],
+                "voter": self.data['createdBy']}
 
 
     # get political office results
@@ -85,15 +149,14 @@ class UserModule(db):
         """ Political Office Results """
         office_results = []
 
-        candidates_query = """ SELECT candidate FROM vote WHERE office = {}\
+        candidates_query = """ SELECT candidate FROM vote WHERE office = {}
                            GROUP BY candidate """.format(office_id)
         candidates = db.fetch_multiple_items(candidates_query)
 
         for candidate in candidates:
-            votes_query = """ SELECT * FROM vote WHERE office = {}\
+            votes_query = """ SELECT * FROM vote WHERE office = {}
                           AND candidate = {} """.format(office_id, candidate[0])
             votes = len(db.fetch_multiple_items(votes_query))
-
             office_results.append({"office":office_id, "candidate":candidate[0],
                                    "result":votes})
 
@@ -102,7 +165,41 @@ class UserModule(db):
     # petition
     def requestPetition(self):
         """ Request Partition Method """
-        validated_data = self.data
 
-        db.insert_data('petition', validated_data)
-        return validated_data
+        expected_fields = ['createdBy', 'office', 'body', 'evidence']
+
+        for field in expected_fields:
+            dv.validateFields(field, self.data)
+
+        # validate not empty and type
+        for key in self.data:
+            if key != "evidence":
+                dv.validateEmpty(key, self.data[key])
+
+            if key == "body" or key == "evidence":
+                dv.validateType(key, self.data[key], str)
+            else:
+                dv.validateType(key, self.data[key], int)
+
+
+        office = dv.validateExistence('vote', 'office', self.data['office'])
+
+        if not office:
+            raise BaseError(400, c_message="Can\'t petion for an office not voted for")
+        else:
+            user_query = """ SELECT * FROM petition WHERE office = {} AND
+                         createdBy = {}""".format(self.data['office'], self.data['createdBy'])
+            user_value = db.fetch_multiple_items(user_query)
+
+            if user_value:
+                raise ConflictError('You have already raised a petition for that office')
+            else:
+                db.insert_data('petition', self.data)
+
+            evidence = self.data['evidence'].split(",")
+
+
+        data = {"office":self.data['office'], "createdBy":self.data['createdBy'],
+                "text":self.data['body'], "evidence":evidence}
+
+        return data

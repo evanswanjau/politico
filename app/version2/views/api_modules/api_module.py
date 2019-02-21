@@ -49,6 +49,8 @@ class UserAPI(MethodView):
     # get
     def get(self, office_id):
         """ Get user data """
+        current_user = UserModule()
+
         if office_id:
             data = current_user.officeResults(office_id)
             return make_response(jsonify({
