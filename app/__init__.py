@@ -45,7 +45,7 @@ def create_app(test_config=None):
     def handle_error(error):
         return make_response(jsonify(error.to_dict()), error.code)
 
-    This will catch any uncaught http error
+    #This will catch any uncaught http error
     @app.errorhandler(Exception)
     def exceptional_error(error):
         if isinstance(error, HTTPException):
