@@ -1,10 +1,6 @@
 """ This is the Application Initialization Method """
 import os
 from flask import Flask, make_response, jsonify
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token,
-    get_jwt_identity
-)
 from werkzeug.exceptions import HTTPException
 from instance.config import app_config
 from app.error_handlers import *
