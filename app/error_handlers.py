@@ -1,4 +1,3 @@
-
 """ Custom Error Handling Modules """
 
 class BaseError(Exception):
@@ -15,7 +14,7 @@ class BaseError(Exception):
             message = self.c_message
         else:
             message = self.message
-        return {'status':self.code, 'message': self.c_message}
+        return {'status':self.code, 'error': self.c_message}
 
 
 class NotFoundError(BaseError):
@@ -43,7 +42,7 @@ class ConflictError(BaseError):
 class PermissionError(BaseError):
     def __init__(self, c_message, message='Permission denied'):
         BaseError.__init__(self)
-        self.code = 403
+        self.code = 401
         self.message = message
         self.c_message = c_message
 
@@ -58,6 +57,13 @@ class MethodError(BaseError):
     def __init__(self, c_message, message='Method not allowed'):
         BaseError.__init__(self)
         self.code = 405
+        self.message = message
+        self.c_message = c_message
+
+class NotAcceptable(BaseError):
+    def __init__(self, c_message, message='NotAcceptable'):
+        BaseError.__init__(self)
+        self.code = 406
         self.message = message
         self.c_message = c_message
 

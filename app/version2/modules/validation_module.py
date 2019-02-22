@@ -1,5 +1,5 @@
 """ This is our app's security. No weapon formed against us shall prosper!!! """
-import os
+import os, re
 from ...error_handlers import *
 from app.db.database import DBConnection
 DB_URL = os.getenv("DATABASE_URL")
@@ -12,7 +12,7 @@ class DataValidation():
     def validateFields(field, data):
         data = [key for key in data]
         if field not in data:
-            raise ValidationError(field + ' field does not exist')
+            raise NotAcceptable(field + ' field does not exist')
 
         return False
 
@@ -47,3 +47,21 @@ class DataValidation():
             raise ValidationError(key + ' can\'t be greater than ' + str(max_length) + ' characters.')
         else:
             return False
+
+    def validateEmail(email):
+        if not re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email):
+            raise NotAcceptable('Incorrect email format ' + email)
+        else:
+            return False
+
+
+    # validate string integers
+    def validateStringIntegers(key, value):
+        try:
+            val = int(value)
+            return False
+        except ValueError:
+            raise ValidationError(key + ' ' + value + ' is not an integer')
+
+
+# empty dictionaries

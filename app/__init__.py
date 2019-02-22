@@ -9,6 +9,7 @@ from werkzeug.exceptions import HTTPException
 from instance.config import app_config
 from app.error_handlers import *
 from .version1.views import admin
+from .version2.views import admin2
 from .version2.views import auth
 from .version2.views import user
 from .db.database import DBConnection
@@ -42,13 +43,13 @@ def create_app(test_config=None):
     @app.errorhandler(ForbiddenError)
     @app.errorhandler(BaseError)
     def handle_error(error):
-        return make_response(jsonify(error.to_dict()))
+        return make_response(jsonify(error.to_dict()), error.code)
 
-    # This will catch any uncaught http error
+    This will catch any uncaught http error
     @app.errorhandler(Exception)
     def exceptional_error(error):
         if isinstance(error, HTTPException):
-            return jsonify(status=error.code, message=error.description)
+            return make_response(jsonify(status=error.code, message=error.description), error.code)
 
     # the app home page
     @app.route('/')
@@ -58,6 +59,8 @@ def create_app(test_config=None):
 
     # admin blueprint
     app.register_blueprint(admin.admin_bp)
+    # admin blueprint
+    app.register_blueprint(admin2.admin2_bp)
     # auth blueprint
     app.register_blueprint(auth.auth_bp)
     # user blueprint

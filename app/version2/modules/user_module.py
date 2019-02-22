@@ -1,6 +1,7 @@
 """ The user module that is supposed to take care of all user methods and attributes """
 import psycopg2, re, os
 from app.db.database import DBConnection
+from flask import make_response, jsonify, request
 from app.version2.modules.validation_module import DataValidation as dv
 from ...error_handlers import *
 DB_URL = os.getenv("DATABASE_URL")
@@ -23,11 +24,6 @@ class UserModule(dv):
         for field in expected_fields:
             dv.validateFields(field, self.data)
 
-        # validate not empty and type
-        for key in self.data:
-            dv.validateEmpty(key, self.data[key])
-            dv.validateType(key, self.data[key], str)
-
         # validate length
         dv.validate_length('phoneNumber', self.data['phoneNumber'], 10, 15)
         dv.validate_length('password', self.data['password'], 5, 50)
@@ -37,16 +33,22 @@ class UserModule(dv):
             raise ConflictError('email ' + self.data['email'] + ' already exists')
 
         if dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber']):
-            raise ConflictError('phoneNumber ' + self.data['phoneNumber'] + ' already exists')
+            raise BaseError('phoneNumber ' + self.data['phoneNumber'] + ' already exists')
 
-        dv.validateExistence('users', 'phoneNumber', self.data['phoneNumber'])
+        # validate email
+        dv.validateEmail(self.data['email'])
+
+        # validate phonenumber
+        dv.validateStringIntegers('phoneNumber', self.data['phoneNumber'])
 
         # insert to db
         data = self.data
         self.data["password"] = generate_password_hash(self.data["password"])
         db.insert_data('users', self.data)
         token = create_access_token(identity=self.data['email'])
-        return [{"token": token, "user":self.data}]
+        data = [{"token": token, "user":self.data}]
+
+        return data
 
 
     # login user
@@ -65,13 +67,13 @@ class UserModule(dv):
         # validate existence
         item = dv.validateExistence('users', 'email', self.data['email'])
 
-        user_object = {"id":item[0], "firstname":item[1], "secondname":item[2],
-        "othername":item[3], "email":item[4], "password":item[5], "hqAddress":item[6],
-        "passportUrl":item[7], "isAdmin":item[8]}
+        if item:
+            user_object = {"id":item[0], "firstname":item[1], "secondname":item[2],
+            "othername":item[3], "email":item[4], "password":item[5], "hqAddress":item[6],
+            "passportUrl":item[7], "isAdmin":item[8]}
 
-        if user_object:
             if not check_password_hash(user_object["password"], self.data['password']):
-                raise ForbiddenError('Incorrect password')
+                raise PermissionError('Incorrect password')
         else:
             raise NotFoundError('That acccount does not exist')
 
@@ -93,10 +95,23 @@ class UserModule(dv):
             dv.validateEmpty(key, self.data[key])
             dv.validateType(key, self.data[key], int)
 
+        # office must exist
+        office = dv.validateExistence('office', 'id', office_id)
+
+        if not office:
+            raise NotAcceptable("That office has not been registered")
+
+        # party must exist
+        party = dv.validateExistence('party', 'id', self.data['party'])
+
+        if not party:
+            raise NotAcceptable("That party has not been registered")
+
+        # user must exist
         user_id = dv.validateExistence('users', 'id', self.data['candidate'])
 
         if not user_id:
-            raise BaseError(400, c_message="Candidate is not a registered user")
+            raise NotAcceptable("Candidate is not a registered user")
         else:
             # validate existence
             candidate_object = dv.validateExistence('candidates', 'candidate', self.data['candidate'])
@@ -123,11 +138,21 @@ class UserModule(dv):
             dv.validateEmpty(key, self.data[key])
             dv.validateType(key, self.data[key], int)
 
+        office = dv.validateExistence('office', 'id', self.data['office'])
+
+        if not office:
+            raise NotAcceptable("That office has not been registered")
+
+        # user must exist
+        user = dv.validateExistence('users', 'id', self.data['createdBy'])
+
+        if not user:
+            raise NotAcceptable("That voter has not been registered")
 
         user_id = dv.validateExistence('users', 'id', self.data['candidate'])
 
         if not user_id:
-            raise BaseError(400, c_message="Candidate is not a registered user")
+            raise NotAcceptable("Candidate is not registered")
         else:
             user_vote_query = """ SELECT * FROM vote WHERE office = {}
                               AND createdBy = {} """.format(self.data['office'], self.data['createdBy'])
@@ -185,7 +210,7 @@ class UserModule(dv):
         office = dv.validateExistence('vote', 'office', self.data['office'])
 
         if not office:
-            raise BaseError(400, c_message="Can\'t petion for an office not voted for")
+            raise NotAcceptable("Can\'t petion for an office not voted for")
         else:
             user_query = """ SELECT * FROM petition WHERE office = {} AND
                          createdBy = {}""".format(self.data['office'], self.data['createdBy'])

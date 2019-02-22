@@ -65,13 +65,22 @@ class DBConnection():
         data_values = str(tuple([data[key] for key in data]))
 
         self.cursor.execute(""" INSERT INTO {} ({}) VALUES
-                           {} RETURNING id""".format(table, keys, data_values))
+                           {}""".format(table, keys, data_values))
         value = self.connection.commit()
         return value
 
     # update data
     def update_data(self, table, key, value, field, id):
         """ update data """
-        query = """ UPDATE table SET key = value WHERE field = id """
+        query = """ UPDATE {} SET {} = '{}' WHERE {} = {} """.format(
+        table, key, value, field, id
+        )
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    # update data
+    def delete_data(self, table, field, id):
+        """ update data """
+        query = """ DELETE FROM {} WHERE {} = {} """.format(table, field, id)
         self.cursor.execute(query)
         self.connection.commit()

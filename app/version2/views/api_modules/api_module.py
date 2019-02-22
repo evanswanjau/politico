@@ -15,35 +15,35 @@ class UserAPI(MethodView):
         if action == 'signup':
             new_user = current_user.signupUser()
             return make_response(jsonify({
-                "status": 200,
+                "status": 201,
                 "data": new_user
-                }), 200)
+                }), 201)
         # login user
         elif action == 'login':
             data = current_user.loginUser()
             return make_response(jsonify({
-                "status": 200,
+                "status": 201,
                 "data": data
-                }), 200)
+                }), 201)
         # register candidate
         elif action ==  'register':
             data = current_user.registerCandidate(office_id)
             return make_response(jsonify({
-                "status": 200,
+                "status": 201,
                 "data": data
-                }), 200)
+                }), 201)
         elif action == 'vote':
             data = current_user.userVote()
             return make_response(jsonify({
-                "status": 200,
+                "status": 201,
                 "data": data
-                }), 200)
+                }), 201)
         elif action == 'petition':
             data = current_user.requestPetition()
             return make_response(jsonify({
-                "status": 200,
+                "status": 201,
                 "data": data
-                }), 200)
+                }), 201)
 
 
     # get
