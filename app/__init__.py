@@ -9,6 +9,10 @@ from .version2.views import admin2
 from .version2.views import auth
 from .version2.views import user
 from .db.database import DBConnection
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 def create_app(test_config=None):
     """ Method to Build The APP """
